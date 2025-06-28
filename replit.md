@@ -120,6 +120,10 @@ SwipeHousing is a modern property discovery platform that combines a Tinder-like
 ```
 Changelog:
 - June 28, 2025. Initial setup
+- June 28, 2025. Fixed database connection issues by switching from WebSocket to HTTP-based Neon connection
+- June 28, 2025. Resolved property creation validation errors and landlordId assignment issues
+- June 28, 2025. Increased Express payload limits to 50MB for image uploads
+- June 28, 2025. Property creation functionality fully working with image upload support
 ```
 
 ## User Preferences
