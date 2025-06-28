@@ -1,8 +1,8 @@
-# SwipeHousing - Replit Development Guide
+# LeaseLink - Replit Development Guide
 
 ## Overview
 
-SwipeHousing is a modern property discovery platform that combines a Tinder-like swiping interface for property browsing with a comprehensive landlord management system. The application enables buyers/renters to swipe through property listings and connect with landlords through a matching system.
+LeaseLink is a modern property discovery platform that combines a Tinder-like swiping interface for property browsing with a comprehensive landlord management system. The application enables buyers/renters to swipe through property listings and connect with landlords through a matching system.
 
 ## System Architecture
 
@@ -124,6 +124,10 @@ Changelog:
 - June 28, 2025. Resolved property creation validation errors and landlordId assignment issues
 - June 28, 2025. Increased Express payload limits to 50MB for image uploads
 - June 28, 2025. Property creation functionality fully working with image upload support
+- June 28, 2025. Added AI-powered property recommendations using OpenAI GPT-4o
+- June 28, 2025. Implemented delete and "mark as sold" functionality for landlords
+- June 28, 2025. Fixed property deletion to handle foreign key constraints properly
+- June 28, 2025. Renamed application from SwipeHousing to LeaseLink
 ```
 
 ## User Preferences

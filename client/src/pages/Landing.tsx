@@ -12,7 +12,7 @@ export default function Landing() {
             <div className="flex items-center">
               <div className="text-2xl font-bold text-[var(--swipe-primary)]">
                 <Home className="inline mr-2" size={28} />
-                SwipeHousing
+                LeaseLink
               </div>
             </div>
             

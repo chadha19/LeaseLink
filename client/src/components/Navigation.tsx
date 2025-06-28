@@ -27,7 +27,7 @@ export default function Navigation({ onProfileClick }: NavigationProps) {
           <div className="flex items-center">
             <Link href="/" className="text-2xl font-bold text-[var(--swipe-primary)]">
               <Home className="inline mr-2" size={28} />
-              SwipeHousing
+              LeaseLink
             </Link>
           </div>
           
