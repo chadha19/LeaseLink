@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/hooks/useAuth";
 import { insertPropertySchema } from "@shared/schema";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -53,6 +54,7 @@ const leaseTermOptions = [
 
 export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
   const { toast } = useToast();
+  const { user } = useAuth();
   
   const [formData, setFormData] = useState({
     title: "",
@@ -166,8 +168,18 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
       return;
     }
 
+    if (!user?.id) {
+      toast({
+        title: "Authentication Error",
+        description: "You must be logged in to create a property",
+        variant: "destructive",
+      });
+      return;
+    }
+
     try {
       const submitData = {
+        landlordId: user.id,
         title: formData.title.trim(),
         address: formData.address.trim(),
         zipCode: formData.zipCode.trim(),
