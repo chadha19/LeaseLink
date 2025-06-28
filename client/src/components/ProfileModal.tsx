@@ -443,16 +443,26 @@ export default function ProfileModal({ isOpen, onClose }: ProfileModalProps) {
                     <Badge className="bg-[var(--swipe-accent)] text-white">Active</Badge>
                   </div>
 
-                  <div className="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
-                    <div>
-                      <h4 className="font-medium">Account Type</h4>
-                      <p className="text-sm text-gray-600">
-                        {formData.userType === 'buyer' ? 'Buyer/Renter' : 'Landlord/Seller'}
-                      </p>
-                    </div>
-                    <Button variant="outline" size="sm">
-                      Change Type
-                    </Button>
+                  <div className="space-y-3">
+                    <Label htmlFor="userType">Account Type</Label>
+                    <Select 
+                      value={formData.userType} 
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, userType: value }))}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select account type" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="buyer">Buyer/Renter</SelectItem>
+                        <SelectItem value="landlord">Landlord/Property Owner</SelectItem>
+                      </SelectContent>
+                    </Select>
+                    <p className="text-sm text-gray-600">
+                      {formData.userType === 'buyer' 
+                        ? 'Search for properties and connect with landlords' 
+                        : 'List properties and manage tenant applications'
+                      }
+                    </p>
                   </div>
 
                   <div className="pt-4 border-t">
