@@ -72,10 +72,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Creating property for user:", userId);
       console.log("Request body:", req.body);
       
-      const propertyData = insertPropertySchema.parse({
-        ...req.body,
+      const validatedData = insertPropertySchema.parse(req.body);
+      const propertyData = {
+        ...validatedData,
         landlordId: userId,
-      });
+      };
       
       console.log("Parsed property data:", propertyData);
       const newProperty = await storage.createProperty(propertyData);
