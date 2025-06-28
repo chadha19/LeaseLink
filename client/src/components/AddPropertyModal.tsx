@@ -3,6 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { insertPropertySchema } from "@shared/schema";
+import type { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +17,6 @@ import { Badge } from "@/components/ui/badge";
 import { X, Home, DollarSign, MapPin, Camera, Plus } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
-import { z } from "zod";
 
 interface AddPropertyModalProps {
   isOpen: boolean;
@@ -172,16 +172,15 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
         zipCode: formData.zipCode.trim(),
         price: parseInt(formData.price),
         bedrooms: parseInt(formData.bedrooms),
-        bathrooms: parseFloat(formData.bathrooms),
-        squareFootage: formData.squareFootage ? parseInt(formData.squareFootage) : null,
-        leaseTerms: formData.leaseTerms || null,
-        moveInDate: formData.moveInDate ? new Date(formData.moveInDate) : null,
-        description: formData.description.trim() || null,
+        bathrooms: formData.bathrooms, // Keep as string for schema validation
+        squareFootage: formData.squareFootage ? parseInt(formData.squareFootage) : undefined,
+        leaseTerms: formData.leaseTerms || undefined,
+        moveInDate: formData.moveInDate ? new Date(formData.moveInDate) : undefined,
+        description: formData.description.trim() || undefined,
         amenities: formData.amenities,
         images: formData.images,
-        minCreditScore: formData.minCreditScore ? parseInt(formData.minCreditScore) : null,
+        minCreditScore: formData.minCreditScore ? parseInt(formData.minCreditScore) : undefined,
         autoReject: formData.autoReject,
-        // Add mock market data (in real app, this would come from RentCast API)
         marketEstimateMin: Math.floor(parseInt(formData.price) * 0.9),
         marketEstimateMax: Math.floor(parseInt(formData.price) * 1.1),
         daysOnMarket: Math.floor(Math.random() * 30) + 1,
@@ -199,9 +198,17 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
           }
         });
         setErrors(fieldErrors);
+        console.log("Validation errors:", error.errors);
         toast({
           title: "Validation Error",
-          description: "Please check your inputs",
+          description: `Please check your inputs: ${error.errors.map(e => e.message).join(', ')}`,
+          variant: "destructive",
+        });
+      } else {
+        console.error("Property creation error:", error);
+        toast({
+          title: "Error",
+          description: "Failed to create property. Please try again.",
           variant: "destructive",
         });
       }
@@ -209,13 +216,48 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
   };
 
   const addImage = () => {
-    if (imageUrl.trim() && !formData.images.includes(imageUrl.trim())) {
-      setFormData(prev => ({
-        ...prev,
-        images: [...prev.images, imageUrl.trim()]
-      }));
-      setImageUrl("");
+    const url = imageUrl.trim();
+    
+    if (!url) {
+      toast({
+        title: "Error",
+        description: "Please enter an image URL",
+        variant: "destructive",
+      });
+      return;
     }
+    
+    if (formData.images.includes(url)) {
+      toast({
+        title: "Error",
+        description: "This image URL has already been added",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    // Basic URL validation
+    try {
+      new URL(url);
+    } catch {
+      toast({
+        title: "Error",
+        description: "Please enter a valid image URL",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setFormData(prev => ({
+      ...prev,
+      images: [...prev.images, url]
+    }));
+    setImageUrl("");
+    
+    toast({
+      title: "Success",
+      description: "Image added successfully",
+    });
   };
 
   const removeImage = (image: string) => {
