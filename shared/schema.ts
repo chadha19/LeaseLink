@@ -164,6 +164,7 @@ export const insertUserSchema = createInsertSchema(users).omit({
 
 export const insertPropertySchema = createInsertSchema(properties).omit({
   id: true,
+  landlordId: true,
   createdAt: true,
   updatedAt: true,
 }).extend({
