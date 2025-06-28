@@ -166,6 +166,11 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
   id: true,
   createdAt: true,
   updatedAt: true,
+}).extend({
+  bathrooms: z.union([z.string(), z.number()]).transform((val) => {
+    if (typeof val === 'number') return val.toString();
+    return val;
+  }),
 });
 
 export const insertSwipeSchema = createInsertSchema(swipes).omit({
