@@ -8,10 +8,11 @@ import Navigation from "@/components/Navigation";
 import AddPropertyModal from "@/components/AddPropertyModal";
 import ProfileModal from "@/components/ProfileModal";
 import ChatModal from "@/components/ChatModal";
+import BuyerProfileModal from "@/components/BuyerProfileModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Eye, MessageSquare, CheckCircle, XCircle, Trash2, Archive } from "lucide-react";
+import { Plus, Eye, MessageSquare, CheckCircle, XCircle, Trash2, Archive, User } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 
@@ -21,7 +22,10 @@ export default function LandlordDashboard() {
   const [showAddProperty, setShowAddProperty] = useState(false);
   const [showProfile, setShowProfile] = useState(false);
   const [showChat, setShowChat] = useState(false);
+  const [showBuyerProfile, setShowBuyerProfile] = useState(false);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
+  const [selectedBuyerId, setSelectedBuyerId] = useState<string | null>(null);
+  const [selectedMatch, setSelectedMatch] = useState<Match | null>(null);
   const [editingProperty, setEditingProperty] = useState<Property | null>(null);
 
   // Redirect to login if not authenticated
@@ -147,6 +151,32 @@ export default function LandlordDashboard() {
     setShowChat(true);
   };
 
+  const handleViewBuyerProfile = (match: Match) => {
+    setSelectedBuyerId(match.buyerId);
+    setSelectedMatch(match);
+    setShowBuyerProfile(true);
+  };
+
+  const handleApproveBuyer = () => {
+    if (selectedMatch) {
+      approveMatchMutation.mutate({ 
+        matchId: selectedMatch.id, 
+        status: 'approved' 
+      });
+      setShowBuyerProfile(false);
+    }
+  };
+
+  const handleRejectBuyer = () => {
+    if (selectedMatch) {
+      approveMatchMutation.mutate({ 
+        matchId: selectedMatch.id, 
+        status: 'rejected' 
+      });
+      setShowBuyerProfile(false);
+    }
+  };
+
   if (isLoading || propertiesLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -249,26 +279,37 @@ export default function LandlordDashboard() {
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <div className="flex space-x-2">
-                        <Button
-                          size="sm"
-                          onClick={() => approveMatchMutation.mutate({ matchId: match.id, status: 'approved' })}
-                          className="flex-1 bg-[var(--swipe-accent)] hover:bg-opacity-90"
-                          disabled={approveMatchMutation.isPending}
-                        >
-                          <CheckCircle className="mr-1" size={14} />
-                          Approve
-                        </Button>
+                      <div className="space-y-2">
                         <Button
                           size="sm"
                           variant="outline"
-                          onClick={() => approveMatchMutation.mutate({ matchId: match.id, status: 'rejected' })}
-                          className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
-                          disabled={approveMatchMutation.isPending}
+                          onClick={() => handleViewBuyerProfile(match)}
+                          className="w-full mb-2"
                         >
-                          <XCircle className="mr-1" size={14} />
-                          Decline
+                          <User className="mr-1" size={14} />
+                          View Buyer Profile
                         </Button>
+                        <div className="flex space-x-2">
+                          <Button
+                            size="sm"
+                            onClick={() => approveMatchMutation.mutate({ matchId: match.id, status: 'approved' })}
+                            className="flex-1 bg-[var(--swipe-accent)] hover:bg-opacity-90"
+                            disabled={approveMatchMutation.isPending}
+                          >
+                            <CheckCircle className="mr-1" size={14} />
+                            Approve
+                          </Button>
+                          <Button
+                            size="sm"
+                            variant="outline"
+                            onClick={() => approveMatchMutation.mutate({ matchId: match.id, status: 'rejected' })}
+                            className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
+                            disabled={approveMatchMutation.isPending}
+                          >
+                            <XCircle className="mr-1" size={14} />
+                            Decline
+                          </Button>
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
@@ -431,6 +472,21 @@ export default function LandlordDashboard() {
             setSelectedMatchId(null);
           }}
           matchId={selectedMatchId}
+        />
+      )}
+
+      {selectedBuyerId && (
+        <BuyerProfileModal
+          isOpen={showBuyerProfile}
+          onClose={() => {
+            setShowBuyerProfile(false);
+            setSelectedBuyerId(null);
+            setSelectedMatch(null);
+          }}
+          buyerId={selectedBuyerId}
+          onApprove={handleApproveBuyer}
+          onReject={handleRejectBuyer}
+          matchStatus={selectedMatch?.status}
         />
       )}
     </div>

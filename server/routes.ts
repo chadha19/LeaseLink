@@ -23,6 +23,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  // Get user by ID (for landlords to view buyer profiles)
+  app.get('/api/users/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.params.id;
+      const user = await storage.getUser(userId);
+      
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+      
+      // Return user profile (excluding sensitive data like sessions)
+      res.json(user);
+    } catch (error) {
+      console.error("Error fetching user:", error);
+      res.status(500).json({ message: "Failed to fetch user" });
+    }
+  });
+
   // User profile routes
   app.patch('/api/user/profile', isAuthenticated, async (req: any, res) => {
     try {
