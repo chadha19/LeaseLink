@@ -172,6 +172,20 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
     if (typeof val === 'number') return val.toString();
     return val;
   }),
+  moveInDate: z.union([z.string(), z.date()]).optional().transform((val) => {
+    if (typeof val === 'string') return new Date(val);
+    return val;
+  }),
+  squareFootage: z.number().optional(),
+  leaseTerms: z.string().optional(),
+  description: z.string().optional(),
+  amenities: z.array(z.string()).optional(),
+  images: z.array(z.string()).optional(),
+  minCreditScore: z.number().optional(),
+  autoReject: z.boolean().optional(),
+  marketEstimateMin: z.number().optional(),
+  marketEstimateMax: z.number().optional(),
+  daysOnMarket: z.number().optional(),
 });
 
 export const insertSwipeSchema = createInsertSchema(swipes).omit({

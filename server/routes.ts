@@ -82,6 +82,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
       res.json(newProperty);
     } catch (error) {
       if (error instanceof z.ZodError) {
+        console.error("Property validation errors:", error.errors);
         return res.status(400).json({ message: "Invalid property data", errors: error.errors });
       }
       console.error("Error creating property:", error);
