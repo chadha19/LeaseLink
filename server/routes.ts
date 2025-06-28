@@ -121,6 +121,24 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.delete('/api/properties/:id', isAuthenticated, async (req: any, res) => {
+    try {
+      const userId = req.user.claims.sub;
+      const propertyId = req.params.id;
+      
+      const property = await storage.getProperty(propertyId);
+      if (!property || property.landlordId !== userId) {
+        return res.status(404).json({ message: "Property not found" });
+      }
+      
+      await storage.deleteProperty(propertyId);
+      res.json({ message: "Property deleted successfully" });
+    } catch (error) {
+      console.error("Error deleting property:", error);
+      res.status(500).json({ message: "Failed to delete property" });
+    }
+  });
+
   // Swipe routes
   app.post('/api/swipes', isAuthenticated, async (req: any, res) => {
     try {

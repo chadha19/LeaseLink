@@ -11,7 +11,7 @@ import ChatModal from "@/components/ChatModal";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Plus, Eye, MessageSquare, CheckCircle, XCircle } from "lucide-react";
+import { Plus, Eye, MessageSquare, CheckCircle, XCircle, Trash2, Archive } from "lucide-react";
 import { apiRequest } from "@/lib/queryClient";
 import { isUnauthorizedError } from "@/lib/authUtils";
 
@@ -75,6 +75,68 @@ export default function LandlordDashboard() {
       toast({
         title: "Error",
         description: "Failed to update match status",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const deletePropertyMutation = useMutation({
+    mutationFn: async (propertyId: string) => {
+      await apiRequest("DELETE", `/api/properties/${propertyId}`);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/properties/my"] });
+      toast({
+        title: "Success",
+        description: "Property deleted successfully",
+      });
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to delete property",
+        variant: "destructive",
+      });
+    },
+  });
+
+  const togglePropertyStatusMutation = useMutation({
+    mutationFn: async ({ propertyId, isActive }: { propertyId: string; isActive: boolean }) => {
+      await apiRequest("PATCH", `/api/properties/${propertyId}`, { isActive });
+    },
+    onSuccess: (_, { isActive }) => {
+      queryClient.invalidateQueries({ queryKey: ["/api/properties/my"] });
+      toast({
+        title: "Success",
+        description: isActive ? "Property reactivated" : "Property marked as sold/inactive",
+      });
+    },
+    onError: (error) => {
+      if (isUnauthorizedError(error)) {
+        toast({
+          title: "Unauthorized",
+          description: "You are logged out. Logging in again...",
+          variant: "destructive",
+        });
+        setTimeout(() => {
+          window.location.href = "/api/login";
+        }, 500);
+        return;
+      }
+      toast({
+        title: "Error",
+        description: "Failed to update property status",
         variant: "destructive",
       });
     },
@@ -281,29 +343,61 @@ export default function LandlordDashboard() {
                         </span>
                       </div>
 
-                      <div className="flex space-x-2">
-                        <Button 
-                          variant="outline" 
-                          size="sm" 
-                          className="flex-1"
-                          onClick={() => setEditingProperty(property)}
-                        >
-                          Edit
-                        </Button>
-                        {activeChats > 0 && (
+                      <div className="space-y-2">
+                        <div className="flex space-x-2">
                           <Button 
-                            size="sm"
-                            className="flex-1 bg-[var(--swipe-accent)] hover:bg-opacity-90"
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => setEditingProperty(property)}
+                          >
+                            Edit
+                          </Button>
+                          {activeChats > 0 && (
+                            <Button 
+                              size="sm"
+                              className="flex-1 bg-[var(--swipe-accent)] hover:bg-opacity-90"
+                              onClick={() => {
+                                const approvedMatch = propertyMatches.find(m => m.status === 'approved');
+                                if (approvedMatch) {
+                                  handleChatOpen(approvedMatch.id);
+                                }
+                              }}
+                            >
+                              Chat Now
+                            </Button>
+                          )}
+                        </div>
+                        
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1"
+                            onClick={() => togglePropertyStatusMutation.mutate({ 
+                              propertyId: property.id, 
+                              isActive: !property.isActive 
+                            })}
+                            disabled={togglePropertyStatusMutation.isPending}
+                          >
+                            <Archive className="mr-1" size={14} />
+                            {property.isActive ? "Mark Sold" : "Reactivate"}
+                          </Button>
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="flex-1 border-red-300 text-red-600 hover:bg-red-50"
                             onClick={() => {
-                              const approvedMatch = propertyMatches.find(m => m.status === 'approved');
-                              if (approvedMatch) {
-                                handleChatOpen(approvedMatch.id);
+                              if (window.confirm("Are you sure you want to delete this property? This action cannot be undone.")) {
+                                deletePropertyMutation.mutate(property.id);
                               }
                             }}
+                            disabled={deletePropertyMutation.isPending}
                           >
-                            Chat Now
+                            <Trash2 className="mr-1" size={14} />
+                            Delete
                           </Button>
-                        )}
+                        </div>
                       </div>
                     </CardContent>
                   </Card>
