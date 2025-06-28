@@ -22,6 +22,7 @@ export default function LandlordDashboard() {
   const [showProfile, setShowProfile] = useState(false);
   const [showChat, setShowChat] = useState(false);
   const [selectedMatchId, setSelectedMatchId] = useState<string | null>(null);
+  const [editingProperty, setEditingProperty] = useState<Property | null>(null);
 
   // Redirect to login if not authenticated
   useEffect(() => {
@@ -285,6 +286,7 @@ export default function LandlordDashboard() {
                           variant="outline" 
                           size="sm" 
                           className="flex-1"
+                          onClick={() => setEditingProperty(property)}
                         >
                           Edit
                         </Button>
@@ -314,8 +316,12 @@ export default function LandlordDashboard() {
 
       {/* Modals */}
       <AddPropertyModal 
-        isOpen={showAddProperty}
-        onClose={() => setShowAddProperty(false)}
+        isOpen={showAddProperty || !!editingProperty}
+        onClose={() => {
+          setShowAddProperty(false);
+          setEditingProperty(null);
+        }}
+        editingProperty={editingProperty}
       />
       
       <ProfileModal 

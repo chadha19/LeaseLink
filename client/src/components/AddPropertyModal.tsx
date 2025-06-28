@@ -1,9 +1,9 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { useAuth } from "@/hooks/useAuth";
-import { insertPropertySchema } from "@shared/schema";
+import { insertPropertySchema, Property } from "@shared/schema";
 import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
@@ -22,6 +22,7 @@ import { isUnauthorizedError } from "@/lib/authUtils";
 interface AddPropertyModalProps {
   isOpen: boolean;
   onClose: () => void;
+  editingProperty?: Property | null;
 }
 
 const amenityOptions = [
@@ -52,43 +53,89 @@ const leaseTermOptions = [
   "Flexible"
 ];
 
-export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
+export default function AddPropertyModal({ isOpen, onClose, editingProperty }: AddPropertyModalProps) {
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading } = useAuth();
   
   console.log("Auth state:", { user, isAuthenticated, isLoading });
   
   const [formData, setFormData] = useState({
-    title: "",
-    address: "",
-    zipCode: "",
-    price: "",
-    bedrooms: "",
-    bathrooms: "",
-    squareFootage: "",
-    leaseTerms: "",
-    moveInDate: "",
-    description: "",
-    amenities: [] as string[],
-    images: [] as string[],
-    minCreditScore: "",
-    autoReject: false,
+    title: editingProperty?.title || "",
+    address: editingProperty?.address || "",
+    zipCode: editingProperty?.zipCode || "",
+    price: editingProperty?.price?.toString() || "",
+    bedrooms: editingProperty?.bedrooms?.toString() || "",
+    bathrooms: editingProperty?.bathrooms || "",
+    squareFootage: editingProperty?.squareFootage?.toString() || "",
+    leaseTerms: editingProperty?.leaseTerms || "",
+    moveInDate: editingProperty?.moveInDate ? new Date(editingProperty.moveInDate).toISOString().split('T')[0] : "",
+    description: editingProperty?.description || "",
+    amenities: editingProperty?.amenities || [],
+    images: editingProperty?.images || [],
+    minCreditScore: editingProperty?.minCreditScore?.toString() || "",
+    autoReject: editingProperty?.autoReject || false,
   });
 
   const [imageUrl, setImageUrl] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [uploadingFile, setUploadingFile] = useState(false);
 
+  // Update form data when editingProperty changes
+  useEffect(() => {
+    if (editingProperty) {
+      setFormData({
+        title: editingProperty.title || "",
+        address: editingProperty.address || "",
+        zipCode: editingProperty.zipCode || "",
+        price: editingProperty.price?.toString() || "",
+        bedrooms: editingProperty.bedrooms?.toString() || "",
+        bathrooms: editingProperty.bathrooms || "",
+        squareFootage: editingProperty.squareFootage?.toString() || "",
+        leaseTerms: editingProperty.leaseTerms || "",
+        moveInDate: editingProperty.moveInDate ? new Date(editingProperty.moveInDate).toISOString().split('T')[0] : "",
+        description: editingProperty.description || "",
+        amenities: editingProperty.amenities || [],
+        images: editingProperty.images || [],
+        minCreditScore: editingProperty.minCreditScore?.toString() || "",
+        autoReject: editingProperty.autoReject || false,
+      });
+    } else {
+      // Reset form for new property
+      setFormData({
+        title: "",
+        address: "",
+        zipCode: "",
+        price: "",
+        bedrooms: "",
+        bathrooms: "",
+        squareFootage: "",
+        leaseTerms: "",
+        moveInDate: "",
+        description: "",
+        amenities: [],
+        images: [],
+        minCreditScore: "",
+        autoReject: false,
+      });
+    }
+    setErrors({});
+  }, [editingProperty]);
+
   const createPropertyMutation = useMutation({
     mutationFn: async (data: any) => {
-      const response = await apiRequest("POST", "/api/properties", data);
-      return response.json();
+      if (editingProperty) {
+        const response = await apiRequest("PATCH", `/api/properties/${editingProperty.id}`, data);
+        return response.json();
+      } else {
+        const response = await apiRequest("POST", "/api/properties", data);
+        return response.json();
+      }
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["/api/properties/my"] });
       toast({
         title: "Success",
-        description: "Property added successfully!",
+        description: editingProperty ? "Property updated successfully!" : "Property added successfully!",
       });
       onClose();
       resetForm();
@@ -115,20 +162,20 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
 
   const resetForm = () => {
     setFormData({
-      title: "",
-      address: "",
-      zipCode: "",
-      price: "",
-      bedrooms: "",
-      bathrooms: "",
-      squareFootage: "",
-      leaseTerms: "",
-      moveInDate: "",
-      description: "",
-      amenities: [],
-      images: [],
-      minCreditScore: "",
-      autoReject: false,
+      title: editingProperty?.title || "",
+      address: editingProperty?.address || "",
+      zipCode: editingProperty?.zipCode || "",
+      price: editingProperty?.price?.toString() || "",
+      bedrooms: editingProperty?.bedrooms?.toString() || "",
+      bathrooms: editingProperty?.bathrooms || "",
+      squareFootage: editingProperty?.squareFootage?.toString() || "",
+      leaseTerms: editingProperty?.leaseTerms || "",
+      moveInDate: editingProperty?.moveInDate ? new Date(editingProperty.moveInDate).toISOString().split('T')[0] : "",
+      description: editingProperty?.description || "",
+      amenities: editingProperty?.amenities || [],
+      images: editingProperty?.images || [],
+      minCreditScore: editingProperty?.minCreditScore?.toString() || "",
+      autoReject: editingProperty?.autoReject || false,
     });
     setImageUrl("");
     setErrors({});
@@ -371,7 +418,7 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
         <DialogHeader>
           <DialogTitle className="text-xl font-bold text-[var(--swipe-secondary)] flex items-center">
             <Home className="mr-2" size={24} />
-            Add New Property
+            {editingProperty ? "Edit Property" : "Add New Property"}
           </DialogTitle>
         </DialogHeader>
 
@@ -718,7 +765,10 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
               disabled={createPropertyMutation.isPending}
               className="bg-[var(--swipe-primary)] hover:bg-opacity-90"
             >
-              {createPropertyMutation.isPending ? "Creating..." : "Create Property"}
+              {createPropertyMutation.isPending ? 
+                (editingProperty ? "Updating..." : "Creating...") : 
+                (editingProperty ? "Update Property" : "Create Property")
+              }
             </Button>
           </div>
         </form>
