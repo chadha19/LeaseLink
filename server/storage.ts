@@ -132,6 +132,23 @@ export class DatabaseStorage implements IStorage {
   }
 
   async deleteProperty(id: string): Promise<void> {
+    // Delete in the correct order to avoid foreign key constraint violations
+    // First delete messages for any matches related to this property
+    const propertyMatches = await db.select({ id: matches.id })
+      .from(matches)
+      .where(eq(matches.propertyId, id));
+    
+    for (const match of propertyMatches) {
+      await db.delete(messages).where(eq(messages.matchId, match.id));
+    }
+    
+    // Then delete matches for this property
+    await db.delete(matches).where(eq(matches.propertyId, id));
+    
+    // Then delete swipes for this property
+    await db.delete(swipes).where(eq(swipes.propertyId, id));
+    
+    // Finally delete the property itself
     await db.delete(properties).where(eq(properties.id, id));
   }
 
