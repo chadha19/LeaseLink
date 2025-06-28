@@ -39,7 +39,7 @@ export default function SwipeInterface() {
       }
       queryClient.invalidateQueries({ queryKey: ["/api/matches"] });
     },
-    onError: (error) => {
+    onError: (error: any) => {
       if (isUnauthorizedError(error)) {
         toast({
           title: "Unauthorized",
@@ -51,6 +51,13 @@ export default function SwipeInterface() {
         }, 500);
         return;
       }
+      
+      // Handle "already swiped" error silently or with less alarming message
+      if (error.message && error.message.includes("Already swiped")) {
+        // Don't show error for already swiped - just continue to next property
+        return;
+      }
+      
       toast({
         title: "Error",
         description: "Failed to process swipe. Please try again.",
