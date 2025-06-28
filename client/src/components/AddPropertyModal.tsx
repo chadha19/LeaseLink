@@ -54,7 +54,9 @@ const leaseTermOptions = [
 
 export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalProps) {
   const { toast } = useToast();
-  const { user } = useAuth();
+  const { user, isAuthenticated, isLoading } = useAuth();
+  
+  console.log("Auth state:", { user, isAuthenticated, isLoading });
   
   const [formData, setFormData] = useState({
     title: "",
@@ -177,11 +179,8 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
       return;
     }
 
-    console.log("Current user:", user); // Debug log
-
     try {
       const submitData = {
-        landlordId: user.id.toString(),
         title: formData.title.trim(),
         address: formData.address.trim(),
         zipCode: formData.zipCode.trim(),
