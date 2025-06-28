@@ -1,0 +1,219 @@
+🏠 SwipeHousing (Web App Only)
+A web platform where buyers/renters swipe through property listings and connect with landlords upon a mutual match. Think Tinder, but for renting and buying homes.
+
+👥 User Roles
+1. Buyer/Renter
+Profile Fields:
+Full Name
+
+
+Email
+
+
+Credit Score (optional visibility toggle)
+
+
+Monthly Income
+
+
+Desired Move-in Date
+
+
+Budget Range
+
+
+Preferred ZIP Codes / Cities
+
+
+Preferences (bedrooms, bathrooms, pet-friendly, etc.)
+
+
+Capabilities:
+Swipe left/right on listings
+
+
+View own swipes and matches
+
+
+Chat with landlords if match is approved
+
+
+Update profile and preferences
+
+
+
+2. Landlord/Seller
+Profile Fields:
+Full Name
+
+
+Email
+
+
+Phone (optional)
+
+
+Landlord Verification Docs (optional upload to Azure Blob)
+
+
+Property Listing Fields:
+Title (e.g., “Modern 2BR in Queens”)
+
+
+ZIP Code / Address
+
+
+Rent Price
+
+
+Lease Terms (e.g., 12-month, short-term)
+
+
+Bedrooms/Bathrooms
+
+
+Move-in Date
+
+
+Amenities (e.g., A/C, pet-friendly, laundry)
+
+
+Property Images (uploaded to Azure Blob)
+
+
+Min Credit Score
+
+
+Auto-Reject Filter Toggle (e.g., reject if score < 600)
+
+
+Capabilities:
+Add/edit/delete listings
+
+
+See swipes from buyers
+
+
+Approve/deny swipe requests
+
+
+Chat with matched buyers
+
+
+
+🧱 Core Features (Web)
+🧭 1. Swipe Interface (Buyers)
+Swipe cards: Left = skip, Right = Interested
+
+
+Pulls listing data from backend enriched with RentCast API
+
+
+Filter bar: location, price, bedrooms, etc.
+
+
+
+🧠 2. Match System
+Buyer swipes right → stored in backend
+
+
+Landlord sees buyer profile under “interested users”
+
+
+Landlord hits ✅ Approve → match is created
+
+
+Both users can now message each other in the chat panel
+
+
+
+💬 3. Chat System (WebSockets)
+Once matched, users get a private chat room
+
+
+Built using Azure Web PubSub for real-time communication
+
+
+Messages stored in DB for history
+
+
+
+📊 4. RentCast Integration
+When landlord adds listing → backend calls RentCast API
+
+
+Pulls rent estimate, market trends, valuation
+
+
+Data shown on property cards:
+
+
+Rent estimate vs listed price
+
+
+Market rating
+
+
+Days on market estimate
+
+
+
+🧰 Tech Stack (Azure-first Web App)
+🔧 Frontend
+React.js
+
+
+Tailwind CSS
+
+
+React Router / Zustand for client-side routing & state
+
+
+Axios for API calls
+
+
+⚙️ Backend
+Node.js + Express (hosted on Azure App Service)
+
+
+Azure Functions for:
+
+
+Swipe handling
+
+
+Match approval
+
+
+RentCast enrichment
+
+
+Notification triggers
+
+
+💾 Database
+Azure Cosmos DB (NoSQL, stores users, listings, swipes, matches, chats)
+ OR
+
+
+Azure SQL (if going relational)
+
+
+☁️ Azure Services Used
+Functionality
+Azure Service
+Authentication
+Azure AD B2C
+Backend hosting
+Azure App Service
+Real-time chat
+Azure Web PubSub
+Data storage
+Azure Cosmos DB / Azure SQL
+Image hosting
+Azure Blob Storage
+Notifications
+Azure Notification Hubs or SendGrid
+Serverless logic
+Azure Functions
+
