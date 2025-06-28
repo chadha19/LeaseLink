@@ -170,16 +170,18 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
 
     if (!user?.id) {
       toast({
-        title: "Authentication Error",
+        title: "Authentication Error", 
         description: "You must be logged in to create a property",
         variant: "destructive",
       });
       return;
     }
 
+    console.log("Current user:", user); // Debug log
+
     try {
       const submitData = {
-        landlordId: user.id,
+        landlordId: user.id.toString(),
         title: formData.title.trim(),
         address: formData.address.trim(),
         zipCode: formData.zipCode.trim(),
