@@ -3,7 +3,7 @@ import { useMutation } from "@tanstack/react-query";
 import { queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { insertPropertySchema } from "@shared/schema";
-import type { z } from "zod";
+import { z } from "zod";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -73,6 +73,7 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
 
   const [imageUrl, setImageUrl] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [uploadingFile, setUploadingFile] = useState(false);
 
   const createPropertyMutation = useMutation({
     mutationFn: async (data: any) => {
@@ -258,6 +259,74 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
       title: "Success",
       description: "Image added successfully",
     });
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast({
+        title: "Error",
+        description: "Please select an image file",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast({
+        title: "Error",
+        description: "Image size must be less than 5MB",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setUploadingFile(true);
+
+    // Convert file to base64 data URL
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      
+      if (formData.images.includes(dataUrl)) {
+        toast({
+          title: "Error",
+          description: "This image has already been added",
+          variant: "destructive",
+        });
+        setUploadingFile(false);
+        return;
+      }
+
+      setFormData(prev => ({
+        ...prev,
+        images: [...prev.images, dataUrl]
+      }));
+
+      toast({
+        title: "Success",
+        description: "Image uploaded successfully",
+      });
+      
+      setUploadingFile(false);
+      // Reset the input
+      event.target.value = '';
+    };
+
+    reader.onerror = () => {
+      toast({
+        title: "Error",
+        description: "Failed to read the image file",
+        variant: "destructive",
+      });
+      setUploadingFile(false);
+    };
+
+    reader.readAsDataURL(file);
   };
 
   const removeImage = (image: string) => {
@@ -501,18 +570,42 @@ export default function AddPropertyModal({ isOpen, onClose }: AddPropertyModalPr
                   </CardDescription>
                 </CardHeader>
                 <CardContent className="space-y-4">
-                  <div className="flex space-x-2">
-                    <Input
-                      value={imageUrl}
-                      onChange={(e) => setImageUrl(e.target.value)}
-                      onKeyPress={handleImageKeyPress}
-                      placeholder="Enter image URL"
-                      className="flex-1"
-                    />
-                    <Button type="button" onClick={addImage} variant="outline">
-                      <Plus size={16} className="mr-1" />
-                      Add
-                    </Button>
+                  {/* URL Input Method */}
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Add from URL</Label>
+                    <div className="flex space-x-2">
+                      <Input
+                        value={imageUrl}
+                        onChange={(e) => setImageUrl(e.target.value)}
+                        onKeyPress={handleImageKeyPress}
+                        placeholder="Enter image URL (https://...)"
+                        className="flex-1"
+                      />
+                      <Button type="button" onClick={addImage} variant="outline">
+                        <Plus size={16} className="mr-1" />
+                        Add URL
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* File Upload Method */}
+                  <div>
+                    <Label className="text-sm font-medium mb-2 block">Upload from Computer</Label>
+                    <div className="flex items-center space-x-2">
+                      <Input
+                        type="file"
+                        accept="image/*"
+                        onChange={handleFileUpload}
+                        className="flex-1"
+                        disabled={uploadingFile}
+                      />
+                      {uploadingFile && (
+                        <span className="text-sm text-gray-500">Uploading...</span>
+                      )}
+                    </div>
+                    <p className="text-xs text-gray-500 mt-1">
+                      Supported formats: JPG, PNG, GIF, WebP (max 5MB)
+                    </p>
                   </div>
 
                   {formData.images.length > 0 && (
