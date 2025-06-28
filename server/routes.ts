@@ -4,6 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
 import { insertPropertySchema, insertSwipeSchema, insertMatchSchema, insertMessageSchema } from "@shared/schema";
+import { AIRecommendationService } from "./aiRecommendations";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -59,7 +60,14 @@ export async function registerRoutes(app: Express): Promise<Server> {
         !swipedPropertyIds.includes(prop.id) && prop.landlordId !== userId
       );
       
-      res.json(availableProperties);
+      // Use AI to recommend properties based on user preferences and behavior
+      const recommendedProperties = await AIRecommendationService.generateRecommendations(
+        user,
+        availableProperties,
+        swipedProperties
+      );
+      
+      res.json(recommendedProperties);
     } catch (error) {
       console.error("Error fetching properties:", error);
       res.status(500).json({ message: "Failed to fetch properties" });
