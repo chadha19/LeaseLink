@@ -51,6 +51,7 @@ export interface IStorage {
   getMatch(id: string): Promise<Match | undefined>;
   updateMatchStatus(id: string, status: string): Promise<Match>;
   getPendingMatchesForProperty(propertyId: string): Promise<Match[]>;
+  getMatchesByProperty(propertyId: string): Promise<Match[]>;
   
   // Message operations
   createMessage(message: InsertMessage): Promise<Message>;
@@ -238,6 +239,14 @@ export class DatabaseStorage implements IStorage {
         eq(matches.propertyId, propertyId),
         eq(matches.status, "pending")
       ))
+      .orderBy(desc(matches.createdAt));
+  }
+
+  async getMatchesByProperty(propertyId: string): Promise<Match[]> {
+    return await db
+      .select()
+      .from(matches)
+      .where(eq(matches.propertyId, propertyId))
       .orderBy(desc(matches.createdAt));
   }
 

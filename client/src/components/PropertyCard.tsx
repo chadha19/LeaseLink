@@ -1,9 +1,9 @@
 import { Property } from "@shared/schema";
 import { Badge } from "@/components/ui/badge";
-import { Bed, Bath, Square, MapPin } from "lucide-react";
+import { Bed, Bath, Square, MapPin, Users } from "lucide-react";
 
 interface PropertyCardProps {
-  property: Property;
+  property: Property & { interestedCount?: number };
   style?: React.CSSProperties;
   className?: string;
 }
@@ -35,7 +35,15 @@ export default function PropertyCard({ property, style, className = "" }: Proper
       
       <div className="p-6">
         <div className="flex justify-between items-start mb-3">
-          <h3 className="text-xl font-semibold text-[var(--swipe-secondary)]">{property.title}</h3>
+          <div className="flex-1">
+            <h3 className="text-xl font-semibold text-[var(--swipe-secondary)]">{property.title}</h3>
+            {property.interestedCount !== undefined && property.interestedCount > 0 && (
+              <div className="flex items-center text-sm text-[var(--swipe-accent)] mt-1">
+                <Users size={14} className="mr-1" />
+                <span>{property.interestedCount} interested</span>
+              </div>
+            )}
+          </div>
           <span className="text-2xl font-bold text-[var(--swipe-primary)]">
             {formatPrice(property.price)}
           </span>

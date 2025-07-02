@@ -345,7 +345,7 @@ export default function LandlordDashboard() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {properties.map((property) => {
                 const propertyMatches = matches.filter(m => m.propertyId === property.id);
-                const pendingCount = propertyMatches.filter(m => m.status === 'pending').length;
+                const interestedCount = propertyMatches.filter(m => m.status === 'pending' || m.status === 'approved').length;
                 const activeChats = propertyMatches.filter(m => m.status === 'approved').length;
                 
                 return (
@@ -376,7 +376,7 @@ export default function LandlordDashboard() {
                       <div className="flex justify-between text-sm text-gray-500 mb-4">
                         <span className="flex items-center">
                           <Eye className="mr-1" size={14} />
-                          {pendingCount} interested
+                          {interestedCount} interested
                         </span>
                         <span className="flex items-center">
                           <MessageSquare className="mr-1" size={14} />

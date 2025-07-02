@@ -3,7 +3,7 @@ import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./replitAuth";
-import { insertPropertySchema, insertSwipeSchema, insertMatchSchema, insertMessageSchema } from "@shared/schema";
+import { insertPropertySchema, insertSwipeSchema, insertMatchSchema, insertMessageSchema, type Match } from "@shared/schema";
 import { AIRecommendationService } from "./aiRecommendations";
 import { z } from "zod";
 
@@ -85,7 +85,22 @@ export async function registerRoutes(app: Express): Promise<Server> {
         swipedProperties
       );
       
-      res.json(recommendedProperties);
+      // Add interested count to each property (pending + approved matches)
+      const propertiesWithInterestedCount = await Promise.all(
+        recommendedProperties.map(async (property) => {
+          const propertyMatches = await storage.getMatchesByProperty(property.id);
+          const interestedCount = propertyMatches.filter(
+            (match: Match) => match.status === 'pending' || match.status === 'approved'
+          ).length;
+          
+          return {
+            ...property,
+            interestedCount
+          };
+        })
+      );
+      
+      res.json(propertiesWithInterestedCount);
     } catch (error) {
       console.error("Error fetching properties:", error);
       res.status(500).json({ message: "Failed to fetch properties" });
