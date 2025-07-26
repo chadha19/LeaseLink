@@ -1,20 +1,11 @@
 import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import runtimeErrorOverlay from "@replit/vite-plugin-runtime-error-modal";
 
 export default defineConfig({
   plugins: [
     react(),
-    runtimeErrorOverlay(),
-    ...(process.env.NODE_ENV !== "production" &&
-    process.env.REPL_ID !== undefined
-      ? [
-          await import("@replit/vite-plugin-cartographer").then((m) =>
-            m.cartographer(),
-          ),
-        ]
-      : []),
+    // Standard error overlay is built into Vite - no need for external plugins
   ],
   resolve: {
     alias: {
@@ -33,5 +24,13 @@ export default defineConfig({
       strict: true,
       deny: ["**/.*"],
     },
+    // Built-in error overlay configuration
+    hmr: {
+      overlay: true, // Shows compilation errors as overlay
+    },
+  },
+  // Enhanced error reporting
+  esbuild: {
+    logOverride: { 'this-is-undefined-in-esm': 'silent' }
   },
 });
