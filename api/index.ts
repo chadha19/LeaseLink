@@ -24,13 +24,22 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.url?.startsWith('/api/auth/callback')) {
-      // Handle OAuth callback - for now just redirect to success page
-      const code = req.query.code;
+      // Handle OAuth callback
+      const url = new URL(req.url, `https://${req.headers.host}`);
+      const code = url.searchParams.get('code');
+      const error = url.searchParams.get('error');
+      
+      if (error) {
+        console.log('OAuth error:', error);
+        return res.redirect(302, '/?auth=error&reason=' + encodeURIComponent(error));
+      }
+      
       if (code) {
+        console.log('OAuth success with code:', code.substring(0, 10) + '...');
         // In a full implementation, you'd exchange the code for tokens and create a session
         return res.redirect(302, '/?auth=success');
       } else {
-        return res.redirect(302, '/?auth=error');
+        return res.redirect(302, '/?auth=error&reason=no_code');
       }
     }
 
