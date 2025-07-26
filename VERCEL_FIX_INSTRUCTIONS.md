@@ -23,14 +23,12 @@ git push
 ### 2. Deploy on Vercel
 1. **Import your GitHub repository**
 2. **Framework Preset**: Select "Other" (not Vite)
-3. **Build Settings**:
-   - Build Command: Leave empty (defined in vercel.json)
-   - Output Directory: Leave empty (defined in vercel.json)
+3. **Build Settings** (in Project Settings):
+   - Build Command: `npm run build`
+   - Output Directory: `dist/public`
    - Install Command: `npm install`
-   
-4. **Or Override in vercel.json** (already configured):
-   - Build Command: `npm run build && cp -r dist/public/* public/`
-   - Output Directory: `public`
+
+**Or use the vercel.json configuration** (already set up correctly)
 
 ### 3. Environment Variables
 Add these in Vercel dashboard:

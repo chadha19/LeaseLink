@@ -1,6 +1,6 @@
 {
-  "buildCommand": "./build.sh",
-  "outputDirectory": "public",
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist/public",
   "functions": {
     "api/server.ts": {
       "runtime": "nodejs18.x"
@@ -10,10 +10,6 @@
     {
       "src": "/api/(.*)",
       "dest": "/api/server.ts"
-    },
-    {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
     },
     {
       "src": "/(.*)",
