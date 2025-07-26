@@ -18,8 +18,10 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.url?.startsWith('/api/auth/google')) {
-      const redirectUri = `${req.headers.origin || 'https://lease-link-delta.vercel.app'}/api/auth/callback`;
+      // Use fixed redirect URI to match what you added in Google Console
+      const redirectUri = 'https://lease-link-delta.vercel.app/api/auth/callback';
       const googleAuthUrl = `https://accounts.google.com/oauth2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email%20profile&response_type=code&access_type=offline`;
+      console.log('OAuth redirect URL:', googleAuthUrl);
       return res.redirect(302, googleAuthUrl);
     }
 

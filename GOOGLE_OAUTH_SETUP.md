@@ -14,10 +14,12 @@ The Google 404 error happens because your Google Cloud Console doesn't recognize
 1. **Go to Google Cloud Console**: https://console.cloud.google.com/
 2. **Navigate to**: APIs & Services → Credentials  
 3. **Click on your OAuth 2.0 Client ID**
-4. **Under "Authorized redirect URIs", add**:
+4. **Under "Authorized redirect URIs", add EXACTLY**:
    ```
    https://lease-link-delta.vercel.app/api/auth/callback
    ```
+   
+   **Important**: Make sure there are no extra spaces or characters. Copy and paste this exactly.
 5. **Click Save**
 
 ## Test Flow After Setup
