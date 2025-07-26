@@ -116,7 +116,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const validatedData = insertPropertySchema.parse(req.body);
       
       // Validate address with Google Maps API if available
-      let addressValidation = { isValid: true, coordinates: null, formattedAddress: null };
+      let addressValidation: { 
+        isValid: boolean; 
+        coordinates: { lat: number; lng: number } | null; 
+        formattedAddress: string | null 
+      } = { isValid: true, coordinates: null, formattedAddress: null };
+      
       try {
         const { GoogleMapsService } = await import('./external-apis');
         const fullAddress = `${validatedData.address}, ${validatedData.zipCode}`;
@@ -128,23 +133,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
             field: "address"
           });
         }
-      } catch (error) {
+        
+        console.log("Address validated successfully:", addressValidation.formattedAddress);
+      } catch (error: any) {
         console.log("Address validation skipped:", error.message);
       }
       
-      const propertyData = {
+      const propertyData: any = {
         ...validatedData,
         landlordId: userId,
-        // Store coordinates if we got them
-        ...(addressValidation.coordinates && {
-          latitude: addressValidation.coordinates.lat.toString(),
-          longitude: addressValidation.coordinates.lng.toString()
-        }),
-        // Use formatted address if available
-        ...(addressValidation.formattedAddress && {
-          address: addressValidation.formattedAddress
-        })
       };
+      
+      // Store coordinates if we got them
+      if (addressValidation.coordinates) {
+        propertyData.latitude = addressValidation.coordinates.lat.toString();
+        propertyData.longitude = addressValidation.coordinates.lng.toString();
+      }
+      
+      // Use formatted address if available
+      if (addressValidation.formattedAddress) {
+        propertyData.address = addressValidation.formattedAddress;
+      }
       
       console.log("Parsed property data:", propertyData);
       const newProperty = await storage.createProperty(propertyData);
