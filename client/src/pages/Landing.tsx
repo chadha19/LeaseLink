@@ -67,8 +67,8 @@ export default function Landing() {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <Card className="text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-[var(--swipe-primary)] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Home className="w-8 h-8 text-[var(--swipe-primary)]" />
+                <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Home className="w-8 h-8 text-red-500" />
                 </div>
                 <CardTitle>Browse Properties</CardTitle>
               </CardHeader>
@@ -82,8 +82,8 @@ export default function Landing() {
 
             <Card className="text-center">
               <CardHeader>
-                <div className="w-16 h-16 bg-[var(--swipe-accent)] bg-opacity-10 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <Heart className="w-8 h-8 text-[var(--swipe-accent)]" />
+                <div className="w-16 h-16 bg-teal-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-8 h-8 text-teal-600" />
                 </div>
                 <CardTitle>Match with Landlords</CardTitle>
               </CardHeader>
