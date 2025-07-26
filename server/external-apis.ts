@@ -1,44 +1,6 @@
 import { API_KEYS, getApiKey, hasApiKey } from "../api-keys";
 
-// RentCast API for property market data
-export class RentCastService {
-  static async getMarketData(address: string, zipCode: string) {
-    if (!hasApiKey('RENTCAST_API_KEY')) {
-      console.log('RentCast API key not configured, using mock data');
-      return {
-        rentEstimate: Math.floor(Math.random() * 1000) + 1500,
-        marketTrend: Math.random() > 0.5 ? 'up' : 'down',
-        comparableRents: [],
-      };
-    }
 
-    try {
-      const response = await fetch(`https://api.rentcast.io/v1/avm/rent/long-term`, {
-        method: 'POST',
-        headers: {
-          'X-Api-Key': getApiKey('RENTCAST_API_KEY'),
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          address,
-          zipCode,
-          propertyType: 'Single Family',
-          bedrooms: 2,
-          bathrooms: 1,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error(`RentCast API error: ${response.status}`);
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('RentCast API error:', error);
-      throw error;
-    }
-  }
-}
 
 // Google Maps service for location validation
 export class GoogleMapsService {

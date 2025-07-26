@@ -126,7 +126,7 @@ export default function Landing() {
                   <Shield className="w-6 h-6 text-[var(--swipe-accent)] mr-3 mt-1" />
                   <div>
                     <h3 className="font-semibold">Verified Listings</h3>
-                    <p className="text-gray-600">All properties are verified with market data from RentCast API</p>
+                    <p className="text-gray-600">All properties are verified and quality-checked by landlords</p>
                   </div>
                 </li>
                 <li className="flex items-start">
@@ -169,7 +169,7 @@ export default function Landing() {
                   <MessageCircle className="w-6 h-6 text-purple-600 mr-3 mt-1" />
                   <div>
                     <h3 className="font-semibold">Market Insights</h3>
-                    <p className="text-gray-600">Get real-time market data to price your properties competitively</p>
+                    <p className="text-gray-600">Get insights from tenant interest and application data</p>
                   </div>
                 </li>
               </ul>

@@ -54,10 +54,10 @@ export const API_KEYS = {
 The services automatically check if keys are configured:
 
 ```typescript
-import { RentCastService } from './server/external-apis';
+import { GoogleMapsService } from './server/external-apis';
 
-// Gets real data if API key is configured, mock data otherwise
-const marketData = await RentCastService.getMarketData(address, zipCode);
+// Validates addresses if API key is configured
+const validation = await GoogleMapsService.validateAddress(address);
 ```
 
 All services gracefully handle missing API keys by either using fallback data or skipping the feature.
