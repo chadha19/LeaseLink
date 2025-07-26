@@ -17,11 +17,13 @@ I can see you have the correct URL configured as URI 4, but multiple redirect UR
 **Option 1: Wait 5-10 minutes**
 Google OAuth changes can take a few minutes to propagate. Try waiting and testing again.
 
-**Option 2: Clean up redirect URIs (recommended)**
-1. Keep only these two URIs:
-   - `https://lease-link-delta.vercel.app/api/auth/callback`
-   - `http://localhost:5000/api/auth/google/callback` (for local development)
-2. Remove the other URIs (URI 1, 2, 3)
+**Option 2: Update to correct callback URL**
+The correct callback URL should be:
+- `https://lease-link-delta.vercel.app/api/auth/google/callback`
+
+In your Google Cloud Console:
+1. Update URI 4 to: `https://lease-link-delta.vercel.app/api/auth/google/callback`
+2. Remove the other URIs (URI 1, 2, 3) 
 3. Click Save
 
 ## Test Flow After Setup
