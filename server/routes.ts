@@ -114,9 +114,36 @@ export async function registerRoutes(app: Express): Promise<Server> {
       console.log("Request body:", req.body);
       
       const validatedData = insertPropertySchema.parse(req.body);
+      
+      // Validate address with Google Maps API if available
+      let addressValidation = { isValid: true, coordinates: null, formattedAddress: null };
+      try {
+        const { GoogleMapsService } = await import('./external-apis');
+        const fullAddress = `${validatedData.address}, ${validatedData.zipCode}`;
+        addressValidation = await GoogleMapsService.validateAddress(fullAddress);
+        
+        if (!addressValidation.isValid) {
+          return res.status(400).json({ 
+            message: "Invalid address. Please check the address and ZIP code.",
+            field: "address"
+          });
+        }
+      } catch (error) {
+        console.log("Address validation skipped:", error.message);
+      }
+      
       const propertyData = {
         ...validatedData,
         landlordId: userId,
+        // Store coordinates if we got them
+        ...(addressValidation.coordinates && {
+          latitude: addressValidation.coordinates.lat.toString(),
+          longitude: addressValidation.coordinates.lng.toString()
+        }),
+        // Use formatted address if available
+        ...(addressValidation.formattedAddress && {
+          address: addressValidation.formattedAddress
+        })
       };
       
       console.log("Parsed property data:", propertyData);

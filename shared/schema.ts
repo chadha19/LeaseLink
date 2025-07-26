@@ -54,6 +54,8 @@ export const properties = pgTable("properties", {
   title: varchar("title").notNull(),
   address: text("address").notNull(),
   zipCode: varchar("zip_code").notNull(),
+  latitude: decimal("latitude"),
+  longitude: decimal("longitude"),
   price: integer("price").notNull(),
   bedrooms: integer("bedrooms").notNull(),
   bathrooms: decimal("bathrooms").notNull(),
