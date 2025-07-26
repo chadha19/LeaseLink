@@ -1,18 +1,16 @@
-import { API_KEYS, getApiKey, hasApiKey } from "../api-keys";
-
-
-
 // Google Maps service for location validation
 export class GoogleMapsService {
   static async validateAddress(address: string) {
-    if (!hasApiKey('GOOGLE_MAPS_API_KEY')) {
+    const apiKey = process.env.GOOGLE_MAPS_API_KEY;
+    
+    if (!apiKey) {
       console.log('Google Maps API key not configured, skipping validation');
-      return { isValid: true, coordinates: null };
+      return { isValid: true, coordinates: null, formattedAddress: null };
     }
 
     try {
       const response = await fetch(
-        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${getApiKey('GOOGLE_MAPS_API_KEY')}`
+        `https://maps.googleapis.com/maps/api/geocode/json?address=${encodeURIComponent(address)}&key=${apiKey}`
       );
 
       if (!response.ok) {
@@ -36,15 +34,16 @@ export class GoogleMapsService {
 // Twilio service for SMS notifications
 export class TwilioService {
   static async sendSMS(to: string, message: string) {
-    if (!hasApiKey('TWILIO_ACCOUNT_SID') || !hasApiKey('TWILIO_AUTH_TOKEN')) {
+    const accountSid = process.env.TWILIO_ACCOUNT_SID;
+    const authToken = process.env.TWILIO_AUTH_TOKEN;
+    const fromNumber = process.env.TWILIO_PHONE_NUMBER;
+    
+    if (!accountSid || !authToken || !fromNumber) {
       console.log('Twilio API keys not configured, skipping SMS');
       return { success: false, message: 'SMS service not configured' };
     }
 
     try {
-      const accountSid = getApiKey('TWILIO_ACCOUNT_SID');
-      const authToken = getApiKey('TWILIO_AUTH_TOKEN');
-      const fromNumber = getApiKey('TWILIO_PHONE_NUMBER');
 
       const response = await fetch(`https://api.twilio.com/2010-04-01/Accounts/${accountSid}/Messages.json`, {
         method: 'POST',
@@ -75,15 +74,16 @@ export class TwilioService {
 // Cloudinary service for image uploads
 export class CloudinaryService {
   static async uploadImage(imageData: string, filename: string) {
-    if (!hasApiKey('CLOUDINARY_CLOUD_NAME') || !hasApiKey('CLOUDINARY_API_KEY')) {
+    const cloudName = process.env.CLOUDINARY_CLOUD_NAME;
+    const apiKey = process.env.CLOUDINARY_API_KEY;
+    const apiSecret = process.env.CLOUDINARY_API_SECRET;
+    
+    if (!cloudName || !apiKey || !apiSecret) {
       console.log('Cloudinary API keys not configured, using local storage');
       return { success: true, url: imageData }; // Return the base64 data URL
     }
 
     try {
-      const cloudName = getApiKey('CLOUDINARY_CLOUD_NAME');
-      const apiKey = getApiKey('CLOUDINARY_API_KEY');
-      const apiSecret = getApiKey('CLOUDINARY_API_SECRET');
 
       const timestamp = Math.round(Date.now() / 1000);
       const signature = require('crypto')
