@@ -10,22 +10,19 @@ This project supports storing API keys directly in your code files for easy deve
 
 ## Example Configuration
 
-```typescript
-export const API_KEYS = {
-  // Replace these with your actual keys
-  RENTCAST_API_KEY: "sk_test_abc123...",
-  GOOGLE_MAPS_API_KEY: "AIzaSyC123...",
-  TWILIO_ACCOUNT_SID: "AC123...",
-  // ... etc
-};
-```
+**Note:** This file is outdated. LeaseLink now uses Replit Secrets for secure API key storage.
+
+Instead of editing files, add your API keys through:
+1. Go to Replit Secrets (lock icon in sidebar)
+2. Add keys like: `GOOGLE_MAPS_API_KEY`, `VITE_GOOGLE_MAPS_API_KEY`
+3. They're automatically available as environment variables
 
 ## Supported Services
 
-### RentCast API (Property Market Data)
-- **What it does**: Gets real estate market estimates and comparable properties
-- **Where to get**: [rentcast.io](https://rentcast.io)
-- **Usage**: Automatic market data when creating properties
+### Google Maps API (Address Validation & Maps)
+- **What it does**: Validates addresses and displays interactive maps
+- **Where to get**: [Google Cloud Console](https://console.cloud.google.com)
+- **Usage**: Address validation and embedded maps in property listings
 
 ### Google Maps API (Location Services)
 - **What it does**: Validates addresses and gets coordinates
