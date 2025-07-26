@@ -137,6 +137,9 @@ Changelog:
 - July 26, 2025. Created custom domain setup guide for independent hosting and professional deployment
 - July 26, 2025. Removed all Replit-specific dependencies and replaced with standard alternatives
 - July 26, 2025. Application is now 100% independent with no Replit connections
+- July 26, 2025. Cleaned up unused services (Twilio, Cloudinary) and legacy API key files
+- July 26, 2025. Fixed account type switching functionality and Google Maps integration
+- July 26, 2025. Streamlined codebase to only include actively used services
 ```
 
 ## User Preferences

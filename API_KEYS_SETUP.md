@@ -24,20 +24,10 @@ Instead of editing files, add your API keys through:
 - **Where to get**: [Google Cloud Console](https://console.cloud.google.com)
 - **Usage**: Address validation and embedded maps in property listings
 
-### Google Maps API (Location Services)
-- **What it does**: Validates addresses and gets coordinates
-- **Where to get**: [Google Cloud Console](https://console.cloud.google.com)
-- **Usage**: Address validation in property forms
-
-### Twilio (SMS Notifications)
-- **What it does**: Sends text message notifications
-- **Where to get**: [twilio.com](https://twilio.com)
-- **Usage**: Match notifications and property alerts
-
-### Cloudinary (Image Storage)
-- **What it does**: Professional image hosting and optimization
-- **Where to get**: [cloudinary.com](https://cloudinary.com)
-- **Usage**: Better image storage instead of base64
+### OpenAI API (AI Property Recommendations)
+- **What it does**: Generates intelligent property recommendations for buyers
+- **Where to get**: [OpenAI Platform](https://platform.openai.com)
+- **Usage**: AI-powered property matching and recommendations
 
 ## How It Works
 
@@ -58,3 +48,11 @@ const validation = await GoogleMapsService.validateAddress(address);
 ```
 
 All services gracefully handle missing API keys by either using fallback data or skipping the feature.
+
+## Currently Active Services
+
+LeaseLink currently uses these services:
+- **Google Maps API**: Address validation and interactive maps
+- **Google OAuth**: User authentication and profile management  
+- **OpenAI API**: AI-powered property recommendations
+- **PostgreSQL**: Database storage for all application data
