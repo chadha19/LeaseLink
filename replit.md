@@ -18,7 +18,7 @@ LeaseLink is a modern property discovery platform that combines a Tinder-like sw
 ### Backend Architecture
 - **Runtime**: Node.js with Express.js server
 - **Database**: PostgreSQL with Drizzle ORM
-- **Authentication**: Replit Auth with OpenID Connect
+- **Authentication**: Google OAuth 2.0 with secure session management
 - **Session Management**: Express sessions with PostgreSQL storage
 - **Real-time Communication**: WebSocket support for instant messaging
 - **API Design**: RESTful API with TypeScript validation using Zod
@@ -39,7 +39,7 @@ LeaseLink is a modern property discovery platform that combines a Tinder-like sw
 - **Messages**: Real-time chat system for matched users and landlords
 
 ### Authentication System
-- **Provider**: Replit Auth integration
+- **Provider**: Google OAuth 2.0 integration
 - **Session Storage**: PostgreSQL-backed session management
 - **User Roles**: Buyer/renter and landlord role differentiation
 - **Protected Routes**: Authentication middleware for API endpoints
@@ -112,7 +112,8 @@ LeaseLink is a modern property discovery platform that combines a Tinder-like sw
 ### Environment Configuration
 - **DATABASE_URL**: PostgreSQL connection string
 - **SESSION_SECRET**: Secure session encryption key
-- **REPL_ID**: Replit environment identifier
+- **GOOGLE_CLIENT_ID**: Google OAuth client identifier
+- **GOOGLE_CLIENT_SECRET**: Google OAuth client secret
 - **NODE_ENV**: Environment mode (development/production)
 
 ## Changelog
