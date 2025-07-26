@@ -128,6 +128,11 @@ Changelog:
 - June 28, 2025. Implemented delete and "mark as sold" functionality for landlords
 - June 28, 2025. Fixed property deletion to handle foreign key constraints properly
 - June 28, 2025. Renamed application from SwipeHousing to LeaseLink
+- July 26, 2025. Completed "interested" count feature showing pending + approved matches on property cards
+- July 26, 2025. Replaced Replit authentication with Google OAuth for independent hosting
+- July 26, 2025. Updated all authentication endpoints and user session handling
+- July 26, 2025. Created deployment guide and environment configuration for independent hosting
+- July 26, 2025. Made application ready for deployment on any hosting platform
 ```
 
 ## User Preferences

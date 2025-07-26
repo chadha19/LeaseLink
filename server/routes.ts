@@ -2,7 +2,7 @@ import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
-import { setupAuth, isAuthenticated } from "./replitAuth";
+import { setupAuth, isAuthenticated } from "./googleAuth";
 import { insertPropertySchema, insertSwipeSchema, insertMatchSchema, insertMessageSchema, type Match } from "@shared/schema";
 import { AIRecommendationService } from "./aiRecommendations";
 import { z } from "zod";
@@ -14,7 +14,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       res.json(user);
     } catch (error) {
@@ -44,7 +44,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // User profile routes
   app.patch('/api/user/profile', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const updateData = req.body;
       
       const updatedUser = await storage.upsertUser({
@@ -62,7 +62,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Property routes
   app.get('/api/properties', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user) {
@@ -109,7 +109,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.post('/api/properties', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       console.log("Creating property for user:", userId);
       console.log("Request body:", req.body);
       
@@ -134,7 +134,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/properties/my', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const properties = await storage.getPropertiesByLandlord(userId);
       res.json(properties);
     } catch (error) {
@@ -145,7 +145,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch('/api/properties/:id', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const propertyId = req.params.id;
       const updates = req.body;
       
@@ -164,7 +164,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.delete('/api/properties/:id', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const propertyId = req.params.id;
       
       const property = await storage.getProperty(propertyId);
@@ -183,7 +183,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Swipe routes
   app.post('/api/swipes', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const { propertyId, direction } = req.body;
       
       // Check if user already swiped on this property
@@ -229,7 +229,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Match routes
   app.get('/api/matches', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const user = await storage.getUser(userId);
       
       if (!user) {
@@ -252,7 +252,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.patch('/api/matches/:id/status', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const matchId = req.params.id;
       const { status } = req.body;
       
@@ -271,7 +271,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
   app.get('/api/properties/:id/pending-matches', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const propertyId = req.params.id;
       
       const property = await storage.getProperty(propertyId);
@@ -290,7 +290,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Message routes
   app.get('/api/matches/:id/messages', isAuthenticated, async (req: any, res) => {
     try {
-      const userId = req.user.claims.sub;
+      const userId = req.user.id;
       const matchId = req.params.id;
       
       const match = await storage.getMatch(matchId);
