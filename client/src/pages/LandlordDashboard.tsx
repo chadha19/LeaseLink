@@ -9,6 +9,7 @@ import AddPropertyModal from "@/components/AddPropertyModal";
 import ProfileModal from "@/components/ProfileModal";
 import ChatModal from "@/components/ChatModal";
 import BuyerProfileModal from "@/components/BuyerProfileModal";
+import PropertyMap from "@/components/PropertyMap";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -384,7 +385,15 @@ export default function LandlordDashboard() {
                         </span>
                       </div>
 
-                      <div className="space-y-2">
+                      <div className="space-y-3">
+                        {/* Property Map */}
+                        <PropertyMap 
+                          address={property.address}
+                          latitude={property.latitude}
+                          longitude={property.longitude}
+                          title={property.title}
+                        />
+                        
                         <div className="flex space-x-2">
                           <Button 
                             variant="outline" 

@@ -129,7 +129,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         
         if (!addressValidation.isValid) {
           return res.status(400).json({ 
-            message: "Invalid address. Please check the address and ZIP code.",
+            message: "Location not found. Please check the address and ZIP code.",
             field: "address"
           });
         }
@@ -184,6 +184,13 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.id;
       const propertyId = req.params.id;
       const updates = req.body;
+
+      // Handle empty moveInDate strings
+      if (updates.moveInDate === '') {
+        updates.moveInDate = null;
+      } else if (updates.moveInDate && typeof updates.moveInDate === 'string') {
+        updates.moveInDate = new Date(updates.moveInDate);
+      }
       
       const property = await storage.getProperty(propertyId);
       if (!property || property.landlordId !== userId) {

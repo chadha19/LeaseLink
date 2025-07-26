@@ -175,7 +175,9 @@ export const insertPropertySchema = createInsertSchema(properties).omit({
     return val;
   }),
   moveInDate: z.union([z.string(), z.date()]).optional().transform((val) => {
-    if (typeof val === 'string') return new Date(val);
+    if (typeof val === 'string') {
+      return val === '' ? undefined : new Date(val);
+    }
     return val;
   }),
   squareFootage: z.number().optional(),

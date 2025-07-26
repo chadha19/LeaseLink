@@ -1,6 +1,7 @@
 import { Property } from "@shared/schema";
 import { Badge } from "@/components/ui/badge";
 import { Bed, Bath, Square, MapPin, Users } from "lucide-react";
+import PropertyMap from "./PropertyMap";
 
 interface PropertyCardProps {
   property: Property & { interestedCount?: number };
@@ -116,6 +117,16 @@ export default function PropertyCard({ property, style, className = "" }: Proper
             {property.description}
           </p>
         )}
+        
+        {/* Property Map */}
+        <div className="mt-4">
+          <PropertyMap 
+            address={property.address}
+            latitude={property.latitude}
+            longitude={property.longitude}
+            title={property.title}
+          />
+        </div>
       </div>
     </div>
   );
