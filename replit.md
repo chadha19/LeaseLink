@@ -1,151 +1,112 @@
-# LeaseLink - Replit Development Guide
+# LeaseLink - Property Discovery Platform
 
 ## Overview
 
-LeaseLink is a modern property discovery platform that combines a Tinder-like swiping interface for property browsing with a comprehensive landlord management system. The application enables buyers/renters to swipe through property listings and connect with landlords through a matching system.
+LeaseLink is a modern property discovery platform that combines a Tinder-like swiping interface for property browsing with a comprehensive landlord management system. The application enables buyers/renters to discover properties through an intuitive swipe interface and facilitates communication between potential tenants and landlords through a real-time chat system.
+
+## User Preferences
+
+Preferred communication style: Simple, everyday language.
 
 ## System Architecture
 
 ### Frontend Architecture
-- **Framework**: React 18 with TypeScript
-- **Routing**: Wouter for client-side navigation
-- **State Management**: TanStack Query (React Query) for server state management
-- **Styling**: Tailwind CSS with custom design system
-- **UI Components**: Radix UI primitives with shadcn/ui component library
-- **Animation**: Framer Motion for swipe interactions
-- **Build Tool**: Vite for development and bundling
+- **Framework**: React 18 with TypeScript for type safety and modern development
+- **Routing**: Wouter for lightweight client-side navigation
+- **State Management**: TanStack Query (React Query) for efficient server state management and caching
+- **Styling**: Tailwind CSS with custom design system and CSS variables for theming
+- **UI Components**: Radix UI primitives with shadcn/ui component library for consistent, accessible components
+- **Animation**: Framer Motion for smooth swipe interactions and gesture handling
+- **Build Tool**: Vite for fast development and optimized production builds
 
 ### Backend Architecture
-- **Runtime**: Node.js with Express.js server
-- **Database**: PostgreSQL with Drizzle ORM
-- **Authentication**: Google OAuth 2.0 with secure session management
-- **Session Management**: Express sessions with PostgreSQL storage
-- **Real-time Communication**: WebSocket support for instant messaging
-- **API Design**: RESTful API with TypeScript validation using Zod
+- **Runtime**: Node.js with Express.js server framework
+- **Database**: PostgreSQL with Drizzle ORM for type-safe database operations
+- **Authentication**: Google OAuth 2.0 with secure session management via connect-pg-simple
+- **Real-time Communication**: WebSocket implementation for instant messaging
+- **API Design**: RESTful API with comprehensive TypeScript validation using Zod schemas
 
 ### Development Environment
-- **Monorepo Structure**: Shared TypeScript types between client and server
-- **Development Server**: Vite dev server with Express API proxy
-- **Hot Module Replacement**: Enabled for rapid development
-- **TypeScript**: Strict mode enabled across all modules
+- **Monorepo Structure**: Shared TypeScript types between client and server in `/shared` directory
+- **Hot Module Replacement**: Vite dev server with Express API proxy for seamless development
+- **TypeScript**: Strict mode enabled across all modules for enhanced type safety
 
 ## Key Components
 
 ### Data Models
+The application uses a comprehensive schema defined in `shared/schema.ts`:
+
 - **Users**: Support for both buyers/renters and landlords with role-based features
-- **Properties**: Complete property listings with images, amenities, and location data
-- **Swipes**: Track user interactions with properties (like/dislike)
+- **Properties**: Complete property listings with images, amenities, location data, and pricing
+- **Swipes**: Track user interactions with properties (like/dislike) for matching algorithm
 - **Matches**: Created when both user and landlord express mutual interest
 - **Messages**: Real-time chat system for matched users and landlords
+- **Sessions**: PostgreSQL-backed session storage for secure authentication
 
 ### Authentication System
-- **Provider**: Google OAuth 2.0 integration
-- **Session Storage**: PostgreSQL-backed session management
-- **User Roles**: Buyer/renter and landlord role differentiation
-- **Protected Routes**: Authentication middleware for API endpoints
+- **Provider**: Google OAuth 2.0 integration with fallback for development
+- **Session Management**: Express sessions stored in PostgreSQL with automatic cleanup
+- **User Roles**: Buyer/renter and landlord role differentiation with role-based routing
+- **Protected Routes**: Authentication middleware protecting all API endpoints
 
 ### Swipe Interface
-- **Technology**: Framer Motion for smooth gesture-based interactions
-- **Matching Logic**: Automatic match creation on mutual interest
-- **Real-time Feedback**: Instant notifications for successful matches
-- **Property Filtering**: Location and preference-based filtering
+- **Technology**: Framer Motion for smooth gesture-based interactions with drag constraints
+- **Matching Logic**: Automatic match creation when both parties show interest
+- **Real-time Feedback**: Instant notifications for successful matches via toast system
 
-### Real-time Features
-- **WebSocket Connection**: Persistent connection for live updates
-- **Chat System**: Instant messaging between matched users
-- **Match Notifications**: Real-time match alerts
-- **Connection Management**: Automatic reconnection handling
+### Real-time Chat System
+- **WebSocket Implementation**: Custom WebSocket server for real-time message delivery
+- **Message Storage**: All messages persisted in PostgreSQL with timestamp tracking
+- **Connection Management**: Automatic reconnection with exponential backoff
 
 ## Data Flow
 
-### Property Discovery Flow
-1. User authentication and profile setup
-2. Property filtering based on user preferences
-3. Swipe interface with gesture-based interactions
-4. Match creation on mutual interest
-5. Real-time notification delivery
-
-### Landlord Management Flow
-1. Property creation and management
-2. Application review and approval
-3. Match management and communication
-4. Analytics and property performance tracking
-
-### Communication Flow
-1. Match establishment between user and landlord
-2. WebSocket connection initialization
-3. Real-time message exchange
-4. Message persistence in database
+1. **User Authentication**: Google OAuth → Session Creation → User Profile Setup
+2. **Property Discovery**: Fetch Properties → Swipe Interface → Record Swipe → Check for Matches
+3. **Match Creation**: Mutual Interest Detected → Create Match → Notify Both Parties
+4. **Real-time Communication**: WebSocket Connection → Message Exchange → Database Persistence
+5. **Landlord Management**: Property CRUD Operations → Application Review → Match Approval/Rejection
 
 ## External Dependencies
 
-### Database and ORM
-- **Neon Database**: Serverless PostgreSQL hosting
-- **Drizzle ORM**: Type-safe database operations
-- **Connection Pooling**: Optimized database connections
+### Required APIs
+- **Google OAuth 2.0**: User authentication and profile data
+- **Google Maps API** (Optional): Address validation and embedded maps for property locations
+- **OpenAI API** (Optional): AI-powered property recommendations and matching
 
-### UI and Styling
-- **Radix UI**: Accessible component primitives
-- **Tailwind CSS**: Utility-first styling framework
-- **Framer Motion**: Animation and gesture library
-- **Lucide React**: Icon library
+### Database Requirements
+- **PostgreSQL**: Primary database for all application data
+- **Connection Pooling**: Neon serverless PostgreSQL recommended for production
 
-### Development Tools
-- **Vite**: Fast build tool and dev server
-- **ESBuild**: JavaScript bundling for production
-- **TypeScript**: Static type checking
-- **PostCSS**: CSS processing pipeline
+### Environment Configuration
+The application requires the following environment variables:
+- `DATABASE_URL`: PostgreSQL connection string
+- `GOOGLE_CLIENT_ID` & `GOOGLE_CLIENT_SECRET`: OAuth credentials
+- `SESSION_SECRET`: Session encryption key
+- `GOOGLE_MAPS_API_KEY` & `VITE_GOOGLE_MAPS_API_KEY`: Maps integration
+- `OPENAI_API_KEY`: AI recommendations (optional)
 
 ## Deployment Strategy
 
-### Production Build
-- **Client**: Vite builds optimized React bundle
-- **Server**: ESBuild creates Node.js bundle
-- **Assets**: Static assets served from dist/public
-- **Environment**: Production environment variables required
+### Platform Independence
+The application has been architected to be completely independent of Replit's proprietary services and can be deployed on any Node.js-compatible hosting platform.
 
-### Database Setup
-- **Schema**: Automated with Drizzle migrations
-- **Connection**: PostgreSQL connection string required
-- **Sessions**: Automatic session table management
+### Recommended Hosting Options
+1. **Vercel**: Automatic deployments from GitHub with serverless functions
+2. **Railway**: Simple deployment with built-in PostgreSQL
+3. **Render**: Free tier available with automatic builds
+4. **Traditional VPS**: DigitalOcean, Linode, or similar providers
 
-### Environment Configuration
-- **DATABASE_URL**: PostgreSQL connection string
-- **SESSION_SECRET**: Secure session encryption key
-- **GOOGLE_CLIENT_ID**: Google OAuth client identifier
-- **GOOGLE_CLIENT_SECRET**: Google OAuth client secret
-- **NODE_ENV**: Environment mode (development/production)
+### Build Process
+- **Frontend**: Vite builds to `dist/public` directory
+- **Backend**: esbuild bundles server code to `dist/index.js`
+- **Database**: Drizzle migrations handle schema deployment
+- **Assets**: Static assets served from build directory
 
-## Changelog
+### Production Considerations
+- Environment variables must be configured on hosting platform
+- PostgreSQL database must be provisioned (Neon recommended for serverless)
+- Google OAuth redirect URIs must be updated for production domain
+- WebSocket connections require proper proxy configuration for some hosting platforms
 
-```
-Changelog:
-- June 28, 2025. Initial setup
-- June 28, 2025. Fixed database connection issues by switching from WebSocket to HTTP-based Neon connection
-- June 28, 2025. Resolved property creation validation errors and landlordId assignment issues
-- June 28, 2025. Increased Express payload limits to 50MB for image uploads
-- June 28, 2025. Property creation functionality fully working with image upload support
-- June 28, 2025. Added AI-powered property recommendations using OpenAI GPT-4o
-- June 28, 2025. Implemented delete and "mark as sold" functionality for landlords
-- June 28, 2025. Fixed property deletion to handle foreign key constraints properly
-- June 28, 2025. Renamed application from SwipeHousing to LeaseLink
-- July 26, 2025. Completed "interested" count feature showing pending + approved matches on property cards
-- July 26, 2025. Replaced Replit authentication with Google OAuth for independent hosting
-- July 26, 2025. Updated all authentication endpoints and user session handling
-- July 26, 2025. Created deployment guide and environment configuration for independent hosting
-- July 26, 2025. Made application ready for deployment on any hosting platform
-- July 26, 2025. Created custom domain setup guide for independent hosting and professional deployment
-- July 26, 2025. Removed all Replit-specific dependencies and replaced with standard alternatives
-- July 26, 2025. Application is now 100% independent with no Replit connections
-- July 26, 2025. Cleaned up unused services (Twilio, Cloudinary) and legacy API key files
-- July 26, 2025. Fixed account type switching functionality and Google Maps integration
-- July 26, 2025. Streamlined codebase to only include actively used services
-- July 26, 2025. Created comprehensive hosting guide for custom domain leaselink.pro
-- July 26, 2025. Application ready for production deployment with professional domain
-```
-
-## User Preferences
-
-```
-Preferred communication style: Simple, everyday language.
-```
+The application includes comprehensive deployment guides for multiple platforms and detailed setup instructions for all external services.
