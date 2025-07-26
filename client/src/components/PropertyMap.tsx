@@ -18,7 +18,8 @@ export default function PropertyMap({ address, latitude, longitude, title }: Pro
     : encodeURIComponent(address);
 
   const googleMapsUrl = `https://www.google.com/maps/search/?api=1&query=${mapQuery}`;
-  const embeddedMapUrl = `https://www.google.com/maps/embed/v1/place?key=${import.meta.env.VITE_GOOGLE_MAPS_API_KEY}&q=${mapQuery}`;
+  const googleMapsApiKey = import.meta.env.VITE_GOOGLE_MAPS_API_KEY || import.meta.env.VITE_GOOGLE_API_KEY;
+  const embeddedMapUrl = `https://www.google.com/maps/embed/v1/place?key=${googleMapsApiKey}&q=${mapQuery}`;
 
   if (!showMap) {
     return (
@@ -51,7 +52,7 @@ export default function PropertyMap({ address, latitude, longitude, title }: Pro
       
       <div className="relative">
         {/* Embedded Google Map */}
-        {import.meta.env.VITE_GOOGLE_MAPS_API_KEY ? (
+        {googleMapsApiKey ? (
           <iframe
             src={embeddedMapUrl}
             width="100%"
