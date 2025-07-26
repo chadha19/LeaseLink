@@ -47,11 +47,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
       const userId = req.user.id;
       const updateData = req.body;
       
-      const updatedUser = await storage.upsertUser({
-        id: userId,
-        ...updateData,
-      });
+      console.log("Updating user profile:", userId, "with data:", updateData);
       
+      const updatedUser = await storage.updateUserProfile(userId, updateData);
+      
+      console.log("Profile updated successfully:", updatedUser);
       res.json(updatedUser);
     } catch (error) {
       console.error("Error updating profile:", error);
