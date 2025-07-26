@@ -1,41 +1,60 @@
-# Fix for Vercel Deployment Issue
+# Vercel Deployment - READY TO DEPLOY ✅
 
-## Problem
-Your app is showing raw JavaScript code because Vercel configured it as a Vite-only frontend app instead of a full-stack Node.js application.
+## Status: FIXED - Ready for Deployment
 
-## Solution Steps
+Your LeaseLink app is now properly configured for Vercel serverless deployment.
 
-### 1. In Vercel Dashboard
-1. Go to your project settings
-2. **Change Framework Preset from "Vite" to "Other"**
-3. **Update Build Settings:**
+## What Was Fixed
+- ✅ **Serverless Function**: Created `/api/server.ts` as Vercel entry point
+- ✅ **Routing Configuration**: `vercel.json` routes API calls to serverless function
+- ✅ **Build Process**: Frontend builds to `/dist/public/`, backend compiles properly
+- ✅ **Session Management**: Configured for production environment
+- ✅ **Database**: Neon PostgreSQL ready with all required tables
+
+## Deployment Steps
+
+### 1. Push to GitHub
+```bash
+git add .
+git commit -m "Configure for Vercel deployment"
+git push
+```
+
+### 2. Deploy on Vercel
+1. **Import your GitHub repository**
+2. **Framework Preset**: Select "Other" (not Vite)
+3. **Build Settings**:
    - Build Command: `npm run build`
    - Output Directory: `dist/public`
    - Install Command: `npm install`
 
-### 2. Redeploy
-- Click "Redeploy" to rebuild with correct settings
+### 3. Environment Variables
+Add these in Vercel dashboard:
+- `DATABASE_URL` (your Neon PostgreSQL URL)
+- `GOOGLE_CLIENT_ID` 
+- `GOOGLE_CLIENT_SECRET`
+- `SESSION_SECRET` (generate a secure random string)
+- `VITE_GOOGLE_MAPS_API_KEY`
+- `GOOGLE_MAPS_API_KEY`
+- `OPENAI_API_KEY`
 
-## Why This Fixes It
-- **Vite preset** = Frontend-only static site
-- **Other preset** = Full-stack Node.js app (what you need)
+### 4. Custom Domain
+After successful deployment:
+1. Add `leaselink.pro` in Vercel's Custom Domains
+2. Update your DNS to point to Vercel
+3. Update Google OAuth redirect URLs
 
-Your app needs both:
-- ✅ React frontend (served from `/dist/public/`)
-- ✅ Express API server (served from `/dist/index.js`)
-
-## Alternative: Manual Configuration
-If automatic detection doesn't work, add this build configuration:
-
-**Build Command:** `npm run build`
-**Output Directory:** `dist/public`  
-**Functions:** Your Express server will be auto-detected
+## Architecture
+- **Frontend**: React app served from `/dist/public/`
+- **API**: Express serverless functions at `/api/*`
+- **Database**: Neon PostgreSQL (independent)
+- **Authentication**: Google OAuth with secure sessions
 
 ## Expected Result
-After fixing the preset:
-- ✅ Homepage loads properly (React app)
-- ✅ API endpoints work (`/api/*`)
-- ✅ Authentication functions
-- ✅ Database connections work
+- ✅ Landing page loads correctly
+- ✅ Google OAuth login works
+- ✅ Property swiping interface functions
+- ✅ Database operations work
+- ✅ Real-time features enabled
 
-Your LeaseLink app will then work correctly at the Vercel URL!
+Your app is production-ready for deployment!

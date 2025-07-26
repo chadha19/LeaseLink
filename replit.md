@@ -114,23 +114,31 @@ Preferred communication style: Simple, everyday language.
 - Uses Drizzle ORM with PostgreSQL-compatible databases
 - Automatic schema migrations via `npm run db:push`
 - Session table creation handled automatically
-- Supports both traditional PostgreSQL and serverless variants (Neon, Supabase)
+- **Production**: Neon PostgreSQL database configured and ready
 
 ### Build Process
 - Frontend: Vite builds React app to `dist/public`
-- Backend: esbuild bundles Express server to `dist/index.js`
+- Backend: Express serverless function in `/api/server.ts`
 - Shared types: Compiled and included in both builds
 - Assets: Static files served from build directory
 
-### Hosting Options
-- **Recommended**: Vercel for seamless GitHub integration
-- **Alternative**: Railway, Render, or traditional VPS hosting
-- **Requirements**: Node.js 18+, PostgreSQL database access
-- **Custom Domain**: Configured through hosting platform with DNS updates
+### Vercel Deployment (READY)
+- **Serverless Configuration**: `/api/server.ts` handles all API routes
+- **Build Command**: `npm run build`
+- **Output Directory**: `dist/public`
+- **Framework Preset**: "Other" (not Vite)
+- **Custom Domain**: Ready for leaselink.pro
 
-### Production Considerations
-- Google OAuth redirect URLs must match production domain
-- Session secret should be cryptographically secure
-- Database connection pooling recommended for high traffic
-- WebSocket connections require sticky sessions for load balancing
-- Image uploads may require cloud storage integration for scalability
+### Production Environment
+- ✅ Neon PostgreSQL database with all tables
+- ✅ Google OAuth configuration ready
+- ✅ Serverless function architecture
+- ✅ All TypeScript errors resolved
+- ✅ Environment variables documented
+
+### Recent Changes (July 26, 2025)
+- Migrated from Replit database to independent Neon PostgreSQL
+- Created Vercel serverless function configuration
+- Removed unused services (Twilio, Cloudinary)
+- Fixed all TypeScript compilation errors
+- Prepared for custom domain deployment at leaselink.pro
