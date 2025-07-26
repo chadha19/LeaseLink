@@ -11,12 +11,12 @@ Your LeaseLink app is now properly configured for Vercel serverless deployment.
 - ✅ **Session Management**: Configured for production environment
 - ✅ **Database**: Neon PostgreSQL ready with all required tables
 
-## Deployment Steps
+## Deployment Steps - FINAL CONFIGURATION
 
 ### 1. Push to GitHub
 ```bash
 git add .
-git commit -m "Configure for Vercel deployment"
+git commit -m "Final Vercel configuration - ready for deployment"
 git push
 ```
 
@@ -24,8 +24,8 @@ git push
 1. **Import your GitHub repository**
 2. **Framework Preset**: Select "Other" (not Vite)
 3. **Build Settings**:
-   - Build Command: `npm run build`
-   - Output Directory: `dist/public`
+   - Build Command: `npm run build && cp -r dist/public/* public/`
+   - Output Directory: `public`
    - Install Command: `npm install`
 
 ### 3. Environment Variables
