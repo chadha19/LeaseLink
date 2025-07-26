@@ -5,22 +5,24 @@
 ✅ **API functions correctly**
 ✅ **OAuth redirect works**
 ✅ **All deployment issues resolved**
+✅ **Google Cloud Console has the correct URI configured**
 
-## The Only Issue
-The Google 404 error happens because your Google Cloud Console doesn't recognize the callback URL yet.
+## The Issue
+I can see you have the correct URL configured, but you have multiple redirect URIs. Google might be confused by the multiple URLs.
 
-## Quick Fix (2 minutes)
+## Quick Fix (1 minute)
 
-1. **Go to Google Cloud Console**: https://console.cloud.google.com/
-2. **Navigate to**: APIs & Services → Credentials  
-3. **Click on your OAuth 2.0 Client ID**
-4. **Under "Authorized redirect URIs", add EXACTLY**:
-   ```
-   https://lease-link-delta.vercel.app/api/auth/callback
-   ```
-   
-   **Important**: Make sure there are no extra spaces or characters. Copy and paste this exactly.
-5. **Click Save**
+I can see you have the correct URL configured as URI 4, but multiple redirect URIs might be causing confusion.
+
+**Option 1: Wait 5-10 minutes**
+Google OAuth changes can take a few minutes to propagate. Try waiting and testing again.
+
+**Option 2: Clean up redirect URIs (recommended)**
+1. Keep only these two URIs:
+   - `https://lease-link-delta.vercel.app/api/auth/callback`
+   - `http://localhost:5000/api/auth/google/callback` (for local development)
+2. Remove the other URIs (URI 1, 2, 3)
+3. Click Save
 
 ## Test Flow After Setup
 1. Visit: https://lease-link-delta.vercel.app/
