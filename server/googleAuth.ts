@@ -55,20 +55,34 @@ export async function setupAuth(app: Express) {
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      // Extract user data from Google profile
-      const userData = {
-        id: profile.id,
-        email: profile.emails?.[0]?.value || '',
-        firstName: profile.name?.givenName || '',
-        lastName: profile.name?.familyName || '',
-        profileImageUrl: profile.photos?.[0]?.value || null,
-      };
-
-      // Upsert user in database
-      await storage.upsertUser(userData);
+      const email = profile.emails?.[0]?.value || '';
       
-      return done(null, userData);
+      // First, try to find existing user by email
+      let user = await storage.getUserByEmail(email);
+      
+      if (user) {
+        // User exists, update their Google profile info
+        const updatedUser = await storage.updateUserProfile(user.id, {
+          firstName: profile.name?.givenName || user.firstName,
+          lastName: profile.name?.familyName || user.lastName,
+          profileImageUrl: profile.photos?.[0]?.value || user.profileImageUrl,
+        });
+        return done(null, updatedUser);
+      } else {
+        // New user, create with Google profile data
+        const userData = {
+          id: profile.id,
+          email: email,
+          firstName: profile.name?.givenName || '',
+          lastName: profile.name?.familyName || '',
+          profileImageUrl: profile.photos?.[0]?.value || null,
+        };
+        
+        const newUser = await storage.upsertUser(userData);
+        return done(null, newUser);
+      }
     } catch (error) {
+      console.error('Google OAuth error:', error);
       return done(error, undefined);
     }
   }));
