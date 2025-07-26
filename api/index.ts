@@ -18,9 +18,20 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     }
 
     if (req.url?.startsWith('/api/auth/google')) {
-      // Redirect to Google OAuth (you'll need to set this up in Vercel environment)
-      const googleAuthUrl = `https://accounts.google.com/oauth2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent('https://lease-link-delta.vercel.app/api/auth/callback')}&scope=email%20profile&response_type=code`;
+      const redirectUri = `${req.headers.origin || 'https://lease-link-delta.vercel.app'}/api/auth/callback`;
+      const googleAuthUrl = `https://accounts.google.com/oauth2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email%20profile&response_type=code&access_type=offline`;
       return res.redirect(302, googleAuthUrl);
+    }
+
+    if (req.url?.startsWith('/api/auth/callback')) {
+      // Handle OAuth callback - for now just redirect to success page
+      const code = req.query.code;
+      if (code) {
+        // In a full implementation, you'd exchange the code for tokens and create a session
+        return res.redirect(302, '/?auth=success');
+      } else {
+        return res.redirect(302, '/?auth=error');
+      }
     }
 
     // Default response

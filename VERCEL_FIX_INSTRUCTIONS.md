@@ -33,12 +33,17 @@ git push
 ### 3. Environment Variables
 Add these in Vercel dashboard:
 - `DATABASE_URL` (your Neon PostgreSQL URL)
-- `GOOGLE_CLIENT_ID` 
+- `GOOGLE_CLIENT_ID` ✅ (already configured - OAuth redirect working)
 - `GOOGLE_CLIENT_SECRET`
 - `SESSION_SECRET` (generate a secure random string)
 - `VITE_GOOGLE_MAPS_API_KEY`
 - `GOOGLE_MAPS_API_KEY`
 - `OPENAI_API_KEY`
+
+### 4. Google OAuth Setup
+In your Google Cloud Console, add these redirect URIs:
+- `https://lease-link-delta.vercel.app/api/auth/callback`
+- `https://leaselink.pro/api/auth/callback` (for custom domain)
 
 ### 4. Custom Domain
 After successful deployment:
