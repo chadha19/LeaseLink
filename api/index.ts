@@ -1,7 +1,7 @@
 // Vercel serverless handler that properly wraps Express app
 import serverless from 'serverless-http';
 import express from 'express';
-import { registerRoutes } from '../server/routes';
+import { registerRoutes } from '../server/routes.js';
 
 const app = express();
 
