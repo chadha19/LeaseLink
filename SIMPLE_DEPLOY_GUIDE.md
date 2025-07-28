@@ -11,13 +11,14 @@ Your LeaseLink app is fully functional right here on Replit. No complex deployme
 3. **Your app will be live** at a `.replit.app` domain automatically
 4. **Update Google OAuth**: Add your new `.replit.app` URL to Google Cloud Console
 
-## Option 2: Railway (Simple - 5 minutes)
+## Option 2: Render (Free - 5 minutes)
 
-1. **Go to**: https://railway.app/
-2. **Connect GitHub**: Link your GitHub account
-3. **Deploy from GitHub**: Import this repository
-4. **Environment Variables**: Add your secrets in Railway dashboard
-5. **Custom Domain**: Add `leaselink.pro` in Railway settings
+1. **Go to**: https://render.com/
+2. **Create Web Service**: Connect your GitHub repo
+3. **Build Command**: `npm install && npm run build`
+4. **Start Command**: `npm start`
+5. **Environment Variables**: Add your secrets
+6. **Custom Domain**: Configure `leaselink.pro` (free)
 
 ## Option 3: Render (Free - 10 minutes)
 
