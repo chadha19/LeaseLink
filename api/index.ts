@@ -19,7 +19,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.url?.startsWith('/api/auth/google')) {
       // Use the correct callback URL format that matches your original auth system
-      const redirectUri = 'https://lease-link-delta.vercel.app/api/auth/google/callback';
+      const redirectUri = 'https://leaselink.pro/api/auth/google/callback';
       const googleAuthUrl = `https://accounts.google.com/oauth2/auth?client_id=${process.env.GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=email%20profile&response_type=code&access_type=offline`;
       console.log('OAuth redirect URL:', googleAuthUrl);
       return res.redirect(302, googleAuthUrl);

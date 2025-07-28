@@ -48,7 +48,7 @@ export async function setupAuth(app: Express) {
     ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`
     : process.env.VERCEL_URL
     ? `https://${process.env.VERCEL_URL}/api/auth/google/callback`
-    : "https://lease-link-delta.vercel.app/api/auth/google/callback";
+    : "https://leaselink.pro/api/auth/google/callback";
     
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
