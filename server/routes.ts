@@ -1,4 +1,4 @@
-import type { Express } from "express";
+import express, { type Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
@@ -10,6 +10,10 @@ import { z } from "zod";
 export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
+
+  // Configure express for serverless
+  app.use(express.json());
+  app.use(express.urlencoded({ extended: true }));
 
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
