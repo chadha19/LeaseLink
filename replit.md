@@ -136,9 +136,9 @@ Preferred communication style: Simple, everyday language.
 - ✅ All TypeScript errors resolved
 - ✅ Environment variables documented
 
-### Recent Changes (July 26, 2025)
-- Migrated from Replit database to independent Neon PostgreSQL
-- Created Vercel serverless function configuration
-- Removed unused services (Twilio, Cloudinary)
-- Fixed all TypeScript compilation errors
-- Prepared for custom domain deployment at leaselink.pro
+### Recent Changes (August 5, 2025)
+- Removed all Vercel deployment configurations (no longer using Vercel)
+- Fixed Google OAuth callback URL for Replit deployment
+- Cleaned up deployment files and configurations
+- Identified Google OAuth 403 error cause: callback URL mismatch
+- App currently deployed on Replit with dynamic domain URLs
