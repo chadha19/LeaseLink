@@ -1,4 +1,4 @@
-import express, { type Express } from "express";
+import type { Express } from "express";
 import { createServer, type Server } from "http";
 import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
@@ -11,17 +11,11 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Auth middleware
   await setupAuth(app);
 
-  // Configure express for serverless
-  app.use(express.json());
-  app.use(express.urlencoded({ extended: true }));
-
   // Auth routes
   app.get('/api/auth/user', isAuthenticated, async (req: any, res) => {
     try {
       const userId = req.user.id;
-      console.log("🔍 Fetching user with ID:", userId);
       const user = await storage.getUser(userId);
-      console.log("✅ User found:", user?.email);
       res.json(user);
     } catch (error) {
       console.error("Error fetching user:", error);

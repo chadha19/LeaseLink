@@ -12,11 +12,6 @@ const GOOGLE_CLIENT_SECRET = process.env.GOOGLE_CLIENT_SECRET || 'dummy-client-s
 if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
   console.warn("⚠️  Google OAuth credentials not found. Using dummy values for development.");
   console.warn("   Set GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET for production.");
-} else {
-  console.log("✅ Google OAuth credentials found");
-  console.log("📍 Callback URL:", process.env.REPLIT_DEV_DOMAIN 
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`
-    : "/api/auth/google/callback");
 }
 
 export function getSession() {
@@ -60,7 +55,6 @@ export async function setupAuth(app: Express) {
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      console.log("🔍 Google OAuth callback received:", profile.id, profile.emails?.[0]?.value);
       const email = profile.emails?.[0]?.value || '';
       
       // First, try to find existing user by email
@@ -112,15 +106,8 @@ export async function setupAuth(app: Express) {
   );
 
   app.get("/api/auth/google/callback",
-    (req, res, next) => {
-      console.log("📥 Callback received with query:", req.query);
-      passport.authenticate("google", { 
-        failureRedirect: "/login-failed",
-        failureMessage: true
-      })(req, res, next);
-    },
+    passport.authenticate("google", { failureRedirect: "/login-failed" }),
     (req, res) => {
-      console.log("🎉 Authentication successful for user:", req.user);
       // Successful authentication, redirect to home
       res.redirect("/");
     }
