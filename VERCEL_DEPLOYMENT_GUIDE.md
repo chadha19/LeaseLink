@@ -50,7 +50,7 @@ Now let's deploy it to Vercel for production use!
 
 In Vercel dashboard, add these environment variables:
 
-### 🔑 Required Variables:
+### 🔑 Required Variables (Essential for app to work):
 ```
 DATABASE_URL=your_neon_postgresql_url
 GOOGLE_CLIENT_ID=your_google_client_id
@@ -59,12 +59,16 @@ SESSION_SECRET=any_random_string_for_sessions
 NODE_ENV=production
 ```
 
-### 🌟 Optional Variables (for enhanced features):
+### 🌟 Optional Variables (Enhanced features - app works without these):
 ```
-GOOGLE_MAPS_API_KEY=your_maps_api_key
-VITE_GOOGLE_MAPS_API_KEY=your_maps_api_key_for_client
-OPENAI_API_KEY=your_openai_api_key
+GOOGLE_MAPS_API_KEY=for_address_validation_and_maps
+VITE_GOOGLE_MAPS_API_KEY=for_client_side_maps
+OPENAI_API_KEY=for_ai_property_recommendations
 ```
+
+**Note**: LeaseLink works perfectly without the optional API keys. They provide enhanced features:
+- **Google Maps**: Address validation and embedded maps (falls back to basic validation)
+- **OpenAI**: AI-powered property recommendations (falls back to standard sorting)
 
 ---
 
