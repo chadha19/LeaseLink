@@ -137,13 +137,14 @@ Preferred communication style: Simple, everyday language.
 - ✅ Environment variables documented
 
 ### Recent Changes (August 5, 2025)
-- Removed all Vercel deployment configurations (no longer using Vercel)
-- Fixed Google OAuth callback URL for Replit deployment
-- Cleaned up deployment files and configurations
 - **RESOLVED: Google OAuth authentication is now fully functional**
 - **CONFIRMED: User authentication working - Purabh Singh successfully logged in**
 - Added comprehensive OAuth error logging and debugging
 - Confirmed database connectivity and user creation process works
 - OAuth callback URL routing verified and working correctly
 - **Note: OAuth only works via direct link, not in Replit preview pane (iframe security)**
-- App ready for Google authentication on Replit deployment
+- **NEW: Created complete Vercel deployment setup**
+- Added `vercel.json` configuration for serverless deployment
+- Created `api/server.js` serverless function with all routes
+- Updated deployment guide with working OAuth configuration
+- App ready for both Replit and Vercel deployment
