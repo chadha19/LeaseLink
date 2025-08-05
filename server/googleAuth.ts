@@ -45,7 +45,7 @@ export async function setupAuth(app: Express) {
   app.use((req, res, next) => {
     res.header('X-Frame-Options', 'SAMEORIGIN');
     res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Origin', req.headers.origin as string || '*');
     res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
     res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
@@ -91,18 +91,26 @@ export async function setupAuth(app: Express) {
       } else {
         // New user, create with Google profile data
         const userData = {
-          id: profile.id,
+          id: `google_${profile.id}`, // Prefix Google ID to avoid conflicts
           email: email,
           firstName: profile.name?.givenName || '',
           lastName: profile.name?.familyName || '',
           profileImageUrl: profile.photos?.[0]?.value || null,
         };
         
+        console.log('🔨 Creating new user:', userData);
         const newUser = await storage.upsertUser(userData);
+        console.log('✅ User created successfully:', newUser.id);
         return done(null, newUser);
       }
     } catch (error) {
-      console.error('Google OAuth error:', error);
+      console.error('❌ Google OAuth error:', error);
+      console.error('Error details:', {
+        message: error.message,
+        stack: error.stack,
+        profile: profile?.id,
+        email: profile.emails?.[0]?.value
+      });
       return done(error, undefined);
     }
   }));
@@ -136,11 +144,21 @@ export async function setupAuth(app: Express) {
       failureMessage: true 
     }),
     (req, res) => {
-      console.log("✅ Google OAuth callback successful, user:", req.user?.email);
+      console.log("✅ Google OAuth callback successful, user:", (req.user as any)?.email);
       res.redirect("/");
     }
   );
   
+  // Test endpoint to verify callback URL accessibility
+  app.get("/api/auth/test-callback", (req, res) => {
+    console.log("🧪 Test callback endpoint reached");
+    res.json({ 
+      message: "Callback endpoint is accessible",
+      query: req.query,
+      timestamp: new Date().toISOString()
+    });
+  });
+
   app.get("/login-failed", (req, res) => {
     console.log("❌ Google OAuth failed:", req.session);
     res.status(401).send(`
