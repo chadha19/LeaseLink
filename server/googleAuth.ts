@@ -31,14 +31,23 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
+      secure: false, // Set to false for Replit development
       maxAge: sessionTtl,
+      sameSite: 'lax', // Allow cross-site requests for OAuth
     },
   });
 }
 
 export async function setupAuth(app: Express) {
   app.set("trust proxy", 1);
+  
+  // Add CORS headers for OAuth
+  app.use((req, res, next) => {
+    res.header('X-Frame-Options', 'SAMEORIGIN');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+  });
+  
   app.use(getSession());
   app.use(passport.initialize());
   app.use(passport.session());
@@ -103,17 +112,32 @@ export async function setupAuth(app: Express) {
   });
 
   // Auth routes
-  app.get("/api/auth/google",
-    passport.authenticate("google", { scope: ["profile", "email"] })
-  );
+  app.get("/api/auth/google", (req, res, next) => {
+    console.log("🚀 Starting Google OAuth flow");
+    passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
+  });
 
   app.get("/api/auth/google/callback",
     passport.authenticate("google", { failureRedirect: "/login-failed" }),
     (req, res) => {
+      console.log("✅ Google OAuth callback successful");
       // Successful authentication, redirect to home
       res.redirect("/");
     }
   );
+  
+  app.get("/login-failed", (req, res) => {
+    console.log("❌ Google OAuth failed");
+    res.status(401).send(`
+      <html>
+        <body>
+          <h2>Login Failed</h2>
+          <p>There was an issue with Google authentication.</p>
+          <a href="/">Try Again</a>
+        </body>
+      </html>
+    `);
+  });
 
   app.get("/api/logout", (req, res) => {
     req.logout((err) => {
