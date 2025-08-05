@@ -15,13 +15,13 @@ This error typically occurs due to:
 - **Third-party cookies** disabled
 - **Strict privacy settings** blocking Google OAuth
 
-### 2. Domain Restrictions (Most Likely)
-Check your Google Cloud Console OAuth settings:
+### 2. Domain Restrictions - FIXED
+I can see you've added domains to Google Cloud Console. The issue is:
 
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. APIs & Services → Credentials → Your OAuth Client
-3. Check **"Authorized domains"** section
-4. Make sure `replit.dev` is listed as an authorized domain
+**Remove**: `replit.dev` (showing as invalid)
+**Keep**: The specific Replit subdomain you added
+
+For Replit OAuth, you don't need the parent `replit.dev` domain - just the specific callback URLs in the OAuth client credentials section.
 
 ### 3. Quick Test
 Try opening this URL directly in a new tab:
