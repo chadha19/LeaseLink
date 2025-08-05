@@ -141,7 +141,9 @@ Preferred communication style: Simple, everyday language.
 - Fixed Google OAuth callback URL for Replit deployment
 - Cleaned up deployment files and configurations
 - **RESOLVED: Google OAuth authentication is now fully functional**
+- **CONFIRMED: User authentication working - Purabh Singh successfully logged in**
 - Added comprehensive OAuth error logging and debugging
 - Confirmed database connectivity and user creation process works
 - OAuth callback URL routing verified and working correctly
+- **Note: OAuth only works via direct link, not in Replit preview pane (iframe security)**
 - App ready for Google authentication on Replit deployment
