@@ -103,7 +103,7 @@ export async function setupAuth(app: Express) {
         console.log('✅ User created successfully:', newUser.id);
         return done(null, newUser);
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('❌ Google OAuth error:', error);
       console.error('Error details:', {
         message: error.message,
@@ -157,6 +157,45 @@ export async function setupAuth(app: Express) {
       query: req.query,
       timestamp: new Date().toISOString()
     });
+  });
+
+  // Debug endpoint to test OAuth callback manually
+  app.get("/api/auth/debug-callback", async (req, res) => {
+    console.log("🔍 Debug callback test with fake Google response");
+    const fakeProfile = {
+      id: "123456789",
+      emails: [{ value: "test@example.com" }],
+      name: { givenName: "Test", familyName: "User" },
+      photos: [{ value: "https://example.com/photo.jpg" }],
+      displayName: "Test User"
+    };
+    
+    try {
+      const userData = {
+        id: `google_${fakeProfile.id}`,
+        email: fakeProfile.emails[0].value,
+        firstName: fakeProfile.name.givenName,
+        lastName: fakeProfile.name.familyName,
+        profileImageUrl: fakeProfile.photos[0].value,
+      };
+      
+      console.log('🔨 Testing user creation:', userData);
+      const newUser = await storage.upsertUser(userData);
+      console.log('✅ Test user created:', newUser.id);
+      
+      res.json({
+        success: true,
+        user: newUser,
+        message: "User creation test successful"
+      });
+    } catch (error: any) {
+      console.error('❌ User creation test failed:', error);
+      res.status(500).json({
+        success: false,
+        error: error.message,
+        message: "User creation test failed"
+      });
+    }
   });
 
   app.get("/login-failed", (req, res) => {
