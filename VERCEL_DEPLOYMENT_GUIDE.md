@@ -40,9 +40,9 @@ Now let's deploy it to Vercel for production use!
 3. **Import your LeaseLink repository**
 4. **Configure project settings**:
    - **Framework Preset**: Other (not Vite)
-   - **Build Command**: `vite build --outDir dist/public`
-   - **Output Directory**: `dist/public`
-   - **Install Command**: `npm install`
+   - **Build Command**: Leave empty (uses vercel.json configuration)
+   - **Output Directory**: Leave empty (uses vercel.json configuration)
+   - **Install Command**: Leave empty (uses vercel.json configuration)
 
 ---
 

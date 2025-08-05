@@ -1,7 +1,8 @@
 {
   "version": 2,
-  "buildCommand": "npm run build:client",
+  "buildCommand": "vite build --outDir dist/public",
   "outputDirectory": "dist/public",
+  "installCommand": "npm install",
   "functions": {
     "api/*.js": {
       "runtime": "@vercel/node@3.0.0"
