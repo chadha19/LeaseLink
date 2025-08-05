@@ -45,6 +45,9 @@ export async function setupAuth(app: Express) {
   app.use((req, res, next) => {
     res.header('X-Frame-Options', 'SAMEORIGIN');
     res.header('Access-Control-Allow-Credentials', 'true');
+    res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
     next();
   });
   
@@ -66,6 +69,12 @@ export async function setupAuth(app: Express) {
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
+      console.log('🔍 Google OAuth callback processing:', {
+        profileId: profile.id,
+        email: profile.emails?.[0]?.value,
+        name: profile.displayName
+      });
+      
       const email = profile.emails?.[0]?.value || '';
       
       // First, try to find existing user by email
@@ -117,23 +126,37 @@ export async function setupAuth(app: Express) {
     passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
   });
 
-  app.get("/api/auth/google/callback",
-    passport.authenticate("google", { failureRedirect: "/login-failed" }),
+  app.get("/api/auth/google/callback", 
+    (req, res, next) => {
+      console.log('📥 Received OAuth callback:', req.query);
+      next();
+    },
+    passport.authenticate("google", { 
+      failureRedirect: "/login-failed",
+      failureMessage: true 
+    }),
     (req, res) => {
-      console.log("✅ Google OAuth callback successful");
-      // Successful authentication, redirect to home
+      console.log("✅ Google OAuth callback successful, user:", req.user?.email);
       res.redirect("/");
     }
   );
   
   app.get("/login-failed", (req, res) => {
-    console.log("❌ Google OAuth failed");
+    console.log("❌ Google OAuth failed:", req.session);
     res.status(401).send(`
       <html>
         <body>
           <h2>Login Failed</h2>
           <p>There was an issue with Google authentication.</p>
+          <p>Check the console logs for more details.</p>
           <a href="/">Try Again</a>
+          <script>
+            console.log('OAuth failed. Check server logs.');
+            // Close popup if opened in popup
+            if (window.opener) {
+              window.close();
+            }
+          </script>
         </body>
       </html>
     `);
