@@ -16,8 +16,8 @@ You would need to obtain these from Google Cloud Console:
 3. Enable Google+ API
 4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client IDs"
 5. Set authorized redirect URIs:
-   - Development: `http://localhost:5000/auth/google/callback`
-   - Production: `https://your-domain.replit.app/auth/google/callback`
+   - Current Development: `https://da7d1586-69c0-45fd-bec8-f926885dc0e7-00-24gbaupdcikvc.worf.replit.dev/api/auth/google/callback`
+   - Production: `https://your-domain.replit.app/api/auth/google/callback`
 
 ### 3. Code Changes Required
 
