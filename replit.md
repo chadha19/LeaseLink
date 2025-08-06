@@ -148,4 +148,5 @@ Preferred communication style: Simple, everyday language.
 - Created `api/server.js` serverless function with all routes
 - Updated deployment guide with working OAuth configuration
 - **FIXED: Vercel build issues - missing @vitejs/plugin-react dependency resolved**
+- **WORKAROUND: Created simplified Vite config using built-in JSX support**
 - App ready for both Replit and Vercel deployment

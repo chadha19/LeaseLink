@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "buildCommand": "vite build --outDir dist/public",
+  "buildCommand": "cp vite.config.simple.ts vite.config.ts && vite build --outDir dist/public",
   "outputDirectory": "dist/public",
   "installCommand": "npm install",
   "functions": {
