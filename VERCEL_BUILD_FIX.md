@@ -7,21 +7,21 @@ Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react'
 ```
 
 ## Solution Applied:
-✅ **Updated Vercel build command to install missing dependency**
-- Modified vercel.json to run `npm install @vitejs/plugin-react` before build
-- This ensures the dependency is available even if GitHub is out of sync
-- Workaround for GitHub sync issues
+✅ **Properly added @vitejs/plugin-react to devDependencies**
+- Reverted inefficient build command approach
+- Package is now properly listed in package.json devDependencies
+- Will be installed automatically by Vercel's npm install process
 
 ## Next Steps for Deployment:
 
-1. **Push updated configuration to GitHub:**
+1. **Push the corrected package.json to GitHub:**
    ```bash
-   git add .
-   git commit -m "Fix Vercel build command to install @vitejs/plugin-react"
+   git add package.json package-lock.json vercel.json
+   git commit -m "Fix: add @vitejs/plugin-react for Vite config"
    git push
    ```
 
-2. **Vercel will automatically redeploy** and install the missing dependency
+2. **Vercel will automatically redeploy** with the correct dependencies
 
 3. **Verify environment variables are still set** in Vercel dashboard:
    - DATABASE_URL ✅
