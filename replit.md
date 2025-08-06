@@ -147,4 +147,5 @@ Preferred communication style: Simple, everyday language.
 - Added `vercel.json` configuration for serverless deployment
 - Created `api/server.js` serverless function with all routes
 - Updated deployment guide with working OAuth configuration
+- **FIXED: Vercel build issues - missing @vitejs/plugin-react dependency resolved**
 - App ready for both Replit and Vercel deployment
