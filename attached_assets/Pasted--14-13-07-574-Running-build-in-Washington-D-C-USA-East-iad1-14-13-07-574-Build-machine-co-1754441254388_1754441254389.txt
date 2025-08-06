@@ -1,0 +1,37 @@
+[14:13:07.574] Running build in Washington, D.C., USA (East) – iad1
+[14:13:07.574] Build machine configuration: 2 cores, 8 GB
+[14:13:07.613] Cloning github.com/Purabhh/LeaseLink (Branch: main, Commit: 40f03e3)
+[14:13:08.061] Previous build caches not available
+[14:13:08.367] Cloning completed: 753.000ms
+[14:13:11.647] Running "vercel build"
+[14:13:12.138] Vercel CLI 44.7.2
+[14:13:12.856] > Installing Builder: @vercel/node@3.0.0
+[14:13:22.536] Running "install" command: `npm install`...
+[14:13:33.319] 
+[14:13:33.320] added 502 packages, and audited 503 packages in 11s
+[14:13:33.321] 
+[14:13:33.321] 83 packages are looking for funding
+[14:13:33.321]   run `npm fund` for details
+[14:13:33.329] 
+[14:13:33.330] 5 vulnerabilities (3 low, 2 moderate)
+[14:13:33.330] 
+[14:13:33.330] To address issues that do not require attention, run:
+[14:13:33.331]   npm audit fix
+[14:13:33.331] 
+[14:13:33.331] To address all issues (including breaking changes), run:
+[14:13:33.331]   npm audit fix --force
+[14:13:33.331] 
+[14:13:33.332] Run `npm audit` for details.
+[14:13:33.720] [31mfailed to load config from /vercel/path0/vite.config.ts[39m
+[14:13:33.721] [31merror during build:
+[14:13:33.721] Error [ERR_MODULE_NOT_FOUND]: Cannot find package '@vitejs/plugin-react' imported from /vercel/path0/vite.config.ts.timestamp-1754417613707-d88ca87151e5c.mjs
+[14:13:33.721]     at Object.getPackageJSONURL (node:internal/modules/package_json_reader:255:9)
+[14:13:33.721]     at packageResolve (node:internal/modules/esm/resolve:767:81)
+[14:13:33.721]     at moduleResolve (node:internal/modules/esm/resolve:853:18)
+[14:13:33.721]     at defaultResolve (node:internal/modules/esm/resolve:983:11)
+[14:13:33.721]     at ModuleLoader.defaultResolve (node:internal/modules/esm/loader:783:12)
+[14:13:33.722]     at #cachedDefaultResolve (node:internal/modules/esm/loader:707:25)
+[14:13:33.722]     at ModuleLoader.resolve (node:internal/modules/esm/loader:690:38)
+[14:13:33.722]     at ModuleLoader.getModuleJobForImport (node:internal/modules/esm/loader:307:38)
+[14:13:33.722]     at ModuleJob._link (node:internal/modules/esm/module_job:183:49)[39m
+[14:13:33.730] Error: Command "vite build --outDir dist/public" exited with 1
