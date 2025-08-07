@@ -57,7 +57,6 @@ export default function AddPropertyModal({ isOpen, onClose, editingProperty }: A
   const { toast } = useToast();
   const { user, isAuthenticated, isLoading } = useAuth();
   
-  console.log("Auth state:", { user, isAuthenticated, isLoading });
   
   const [formData, setFormData] = useState({
     title: editingProperty?.title || "",
@@ -259,14 +258,12 @@ export default function AddPropertyModal({ isOpen, onClose, editingProperty }: A
           }
         });
         setErrors(fieldErrors);
-        console.log("Validation errors:", error.errors);
         toast({
           title: "Validation Error",
           description: `Please check your inputs: ${error.errors.map(e => e.message).join(', ')}`,
           variant: "destructive",
         });
       } else {
-        console.error("Property creation error:", error);
         toast({
           title: "Error",
           description: "Failed to create property. Please try again.",

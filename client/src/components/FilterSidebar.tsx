@@ -48,8 +48,8 @@ export default function FilterSidebar() {
   };
 
   const handleApplyFilters = () => {
-    // TODO: Implement filter application
-    console.log("Applying filters:", filters);
+    // Filters would be applied through parent component props
+    // Currently showing all properties as filters are not yet connected to backend
   };
 
   const handleClearFilters = () => {

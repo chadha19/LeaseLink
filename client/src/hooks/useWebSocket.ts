@@ -31,13 +31,11 @@ export function useWebSocket(): UseWebSocketReturn {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
       const wsUrl = `${protocol}//${window.location.host}/ws`;
       
-      console.log("Connecting to WebSocket:", wsUrl);
       
       const ws = new WebSocket(wsUrl);
       wsRef.current = ws;
 
       ws.onopen = () => {
-        console.log("WebSocket connected");
         setIsConnected(true);
         reconnectAttemptsRef.current = 0;
       };
@@ -45,22 +43,18 @@ export function useWebSocket(): UseWebSocketReturn {
       ws.onmessage = (event) => {
         try {
           const message = JSON.parse(event.data) as WebSocketMessage;
-          console.log("WebSocket message received:", message);
           setLastMessage(message);
         } catch (error) {
-          console.error("Failed to parse WebSocket message:", error);
         }
       };
 
       ws.onclose = (event) => {
-        console.log("WebSocket disconnected:", event.code, event.reason);
         setIsConnected(false);
         wsRef.current = null;
 
         // Only attempt to reconnect if authenticated and within retry limits
         if (isAuthenticated && reconnectAttemptsRef.current < maxReconnectAttempts) {
           const delay = Math.min(1000 * Math.pow(2, reconnectAttemptsRef.current), 30000);
-          console.log(`Attempting to reconnect in ${delay}ms (attempt ${reconnectAttemptsRef.current + 1}/${maxReconnectAttempts})`);
           
           reconnectTimeoutRef.current = setTimeout(() => {
             reconnectAttemptsRef.current += 1;
@@ -70,12 +64,10 @@ export function useWebSocket(): UseWebSocketReturn {
       };
 
       ws.onerror = (error) => {
-        console.error("WebSocket error:", error);
         setIsConnected(false);
       };
 
     } catch (error) {
-      console.error("Failed to create WebSocket connection:", error);
       setIsConnected(false);
     }
   }, [isAuthenticated]);
@@ -100,12 +92,9 @@ export function useWebSocket(): UseWebSocketReturn {
       try {
         const messageString = JSON.stringify(message);
         wsRef.current.send(messageString);
-        console.log("WebSocket message sent:", message);
       } catch (error) {
-        console.error("Failed to send WebSocket message:", error);
       }
     } else {
-      console.warn("WebSocket is not connected. Message not sent:", message);
     }
   }, []);
 
