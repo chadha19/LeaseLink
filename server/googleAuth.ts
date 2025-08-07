@@ -31,26 +31,14 @@ export function getSession() {
     saveUninitialized: false,
     cookie: {
       httpOnly: true,
-      secure: false, // Set to false for Replit development
+      secure: process.env.NODE_ENV === 'production',
       maxAge: sessionTtl,
-      sameSite: 'lax', // Allow cross-site requests for OAuth
     },
   });
 }
 
 export async function setupAuth(app: Express) {
   app.set("trust proxy", 1);
-  
-  // Add CORS headers for OAuth
-  app.use((req, res, next) => {
-    res.header('X-Frame-Options', 'SAMEORIGIN');
-    res.header('Access-Control-Allow-Credentials', 'true');
-    res.header('Access-Control-Allow-Origin', req.headers.origin as string || '*');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
-    next();
-  });
-  
   app.use(getSession());
   app.use(passport.initialize());
   app.use(passport.session());
@@ -60,8 +48,6 @@ export async function setupAuth(app: Express) {
     ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`
     : "/api/auth/google/callback";
     
-  console.log(`🔗 Google OAuth callback URL: ${callbackURL}`);
-    
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
     clientSecret: GOOGLE_CLIENT_SECRET,
@@ -69,12 +55,6 @@ export async function setupAuth(app: Express) {
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
-      console.log('🔍 Google OAuth callback processing:', {
-        profileId: profile.id,
-        email: profile.emails?.[0]?.value,
-        name: profile.displayName
-      });
-      
       const email = profile.emails?.[0]?.value || '';
       
       // First, try to find existing user by email
@@ -91,26 +71,18 @@ export async function setupAuth(app: Express) {
       } else {
         // New user, create with Google profile data
         const userData = {
-          id: `google_${profile.id}`, // Prefix Google ID to avoid conflicts
+          id: profile.id,
           email: email,
           firstName: profile.name?.givenName || '',
           lastName: profile.name?.familyName || '',
           profileImageUrl: profile.photos?.[0]?.value || null,
         };
         
-        console.log('🔨 Creating new user:', userData);
         const newUser = await storage.upsertUser(userData);
-        console.log('✅ User created successfully:', newUser.id);
         return done(null, newUser);
       }
-    } catch (error: any) {
-      console.error('❌ Google OAuth error:', error);
-      console.error('Error details:', {
-        message: error.message,
-        stack: error.stack,
-        profile: profile?.id,
-        email: profile.emails?.[0]?.value
-      });
+    } catch (error) {
+      console.error('Google OAuth error:', error);
       return done(error, undefined);
     }
   }));
@@ -129,95 +101,17 @@ export async function setupAuth(app: Express) {
   });
 
   // Auth routes
-  app.get("/api/auth/google", (req, res, next) => {
-    console.log("🚀 Starting Google OAuth flow");
-    passport.authenticate("google", { scope: ["profile", "email"] })(req, res, next);
-  });
+  app.get("/api/auth/google",
+    passport.authenticate("google", { scope: ["profile", "email"] })
+  );
 
-  app.get("/api/auth/google/callback", 
-    (req, res, next) => {
-      console.log('📥 Received OAuth callback:', req.query);
-      next();
-    },
-    passport.authenticate("google", { 
-      failureRedirect: "/login-failed",
-      failureMessage: true 
-    }),
+  app.get("/api/auth/google/callback",
+    passport.authenticate("google", { failureRedirect: "/login-failed" }),
     (req, res) => {
-      console.log("✅ Google OAuth callback successful, user:", (req.user as any)?.email);
+      // Successful authentication, redirect to home
       res.redirect("/");
     }
   );
-  
-  // Test endpoint to verify callback URL accessibility
-  app.get("/api/auth/test-callback", (req, res) => {
-    console.log("🧪 Test callback endpoint reached");
-    res.json({ 
-      message: "Callback endpoint is accessible",
-      query: req.query,
-      timestamp: new Date().toISOString()
-    });
-  });
-
-  // Debug endpoint to test OAuth callback manually
-  app.get("/api/auth/debug-callback", async (req, res) => {
-    console.log("🔍 Debug callback test with fake Google response");
-    const fakeProfile = {
-      id: "123456789",
-      emails: [{ value: "test@example.com" }],
-      name: { givenName: "Test", familyName: "User" },
-      photos: [{ value: "https://example.com/photo.jpg" }],
-      displayName: "Test User"
-    };
-    
-    try {
-      const userData = {
-        id: `google_${fakeProfile.id}`,
-        email: fakeProfile.emails[0].value,
-        firstName: fakeProfile.name.givenName,
-        lastName: fakeProfile.name.familyName,
-        profileImageUrl: fakeProfile.photos[0].value,
-      };
-      
-      console.log('🔨 Testing user creation:', userData);
-      const newUser = await storage.upsertUser(userData);
-      console.log('✅ Test user created:', newUser.id);
-      
-      res.json({
-        success: true,
-        user: newUser,
-        message: "User creation test successful"
-      });
-    } catch (error: any) {
-      console.error('❌ User creation test failed:', error);
-      res.status(500).json({
-        success: false,
-        error: error.message,
-        message: "User creation test failed"
-      });
-    }
-  });
-
-  app.get("/login-failed", (req, res) => {
-    console.log("❌ Google OAuth failed:", req.session);
-    res.status(401).send(`
-      <html>
-        <body>
-          <h2>Login Failed</h2>
-          <p>There was an issue with Google authentication.</p>
-          <p>Check the console logs for more details.</p>
-          <a href="/">Try Again</a>
-          <script>
-            console.log('OAuth failed. Check server logs.');
-            // Close popup if opened in popup
-            if (window.opener) {
-              window.close();
-            }
-          </script>
-        </body>
-      </html>
-    `);
-  });
 
   app.get("/api/logout", (req, res) => {
     req.logout((err) => {

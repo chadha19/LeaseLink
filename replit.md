@@ -136,17 +136,9 @@ Preferred communication style: Simple, everyday language.
 - ✅ All TypeScript errors resolved
 - ✅ Environment variables documented
 
-### Recent Changes (August 5, 2025)
-- **RESOLVED: Google OAuth authentication is now fully functional**
-- **CONFIRMED: User authentication working - Purabh Singh successfully logged in**
-- Added comprehensive OAuth error logging and debugging
-- Confirmed database connectivity and user creation process works
-- OAuth callback URL routing verified and working correctly
-- **Note: OAuth only works via direct link, not in Replit preview pane (iframe security)**
-- **NEW: Created complete Vercel deployment setup**
-- Added `vercel.json` configuration for serverless deployment
-- Created `api/server.js` serverless function with all routes
-- Updated deployment guide with working OAuth configuration
-- **FIXED: Vercel build issues - missing @vitejs/plugin-react dependency resolved**
-- **WORKAROUND: Created simplified Vite config using built-in JSX support**
-- App ready for both Replit and Vercel deployment
+### Recent Changes (July 26, 2025)
+- Migrated from Replit database to independent Neon PostgreSQL
+- Created Vercel serverless function configuration
+- Removed unused services (Twilio, Cloudinary)
+- Fixed all TypeScript compilation errors
+- Prepared for custom domain deployment at leaselink.pro
