@@ -44,9 +44,24 @@ export async function setupAuth(app: Express) {
   app.use(passport.session());
 
   // Google OAuth Strategy
-  const callbackURL = process.env.REPLIT_DEV_DOMAIN 
-    ? `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`
-    : "/api/auth/google/callback";
+  let callbackURL = "/api/auth/google/callback";
+  
+  // Handle different deployment environments
+  if (process.env.REPLIT_DEV_DOMAIN) {
+    // Replit development environment
+    callbackURL = `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`;
+  } else if (process.env.RAILWAY_STATIC_URL) {
+    // Railway deployment environment
+    callbackURL = `${process.env.RAILWAY_STATIC_URL}/api/auth/google/callback`;
+  } else if (process.env.NODE_ENV === 'production' && process.env.VERCEL_URL) {
+    // Vercel deployment environment
+    callbackURL = `https://${process.env.VERCEL_URL}/api/auth/google/callback`;
+  } else if (process.env.CUSTOM_DOMAIN) {
+    // Custom domain environment
+    callbackURL = `https://${process.env.CUSTOM_DOMAIN}/api/auth/google/callback`;
+  }
+  
+  console.log(`🔗 OAuth callback URL configured: ${callbackURL}`);
     
   passport.use(new GoogleStrategy({
     clientID: GOOGLE_CLIENT_ID,
