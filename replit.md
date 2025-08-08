@@ -95,7 +95,6 @@ Preferred communication style: Simple, everyday language.
 
 ### Optional Services
 - **Google Maps API**: Address validation and embedded maps (graceful fallback if unavailable)
-- **OpenAI API**: AI-powered property recommendations (uses fallback algorithm if unavailable)
 - **WebSocket Support**: Real-time chat functionality (degrades gracefully if unavailable)
 
 ### Environment Variables
@@ -105,7 +104,6 @@ Preferred communication style: Simple, everyday language.
 - `SESSION_SECRET`: Session encryption key
 - `GOOGLE_MAPS_API_KEY`: Optional for address validation
 - `VITE_GOOGLE_MAPS_API_KEY`: Client-side maps integration
-- `OPENAI_API_KEY`: Optional for AI recommendations
 - `NODE_ENV`: Environment setting (development/production)
 
 ## Deployment Strategy
@@ -136,9 +134,9 @@ Preferred communication style: Simple, everyday language.
 - ✅ All TypeScript errors resolved
 - ✅ Environment variables documented
 
-### Recent Changes (July 26, 2025)
-- Migrated from Replit database to independent Neon PostgreSQL
-- Created Vercel serverless function configuration
-- Removed unused services (Twilio, Cloudinary)
-- Fixed all TypeScript compilation errors
-- Prepared for custom domain deployment at leaselink.pro
+### Recent Changes (August 8, 2025)
+- **Railway Deployment Ready**: Fixed OAuth callback routing for Railway deployment
+- **OpenAI Dependency Removed**: Replaced AI recommendations with preference-based algorithm
+- **Environment Cleanup**: Removed unused OpenAI API key requirements
+- **Build Optimization**: Streamlined dependencies and improved performance
+- **Railway Configuration**: Added railway.json and deployment scripts

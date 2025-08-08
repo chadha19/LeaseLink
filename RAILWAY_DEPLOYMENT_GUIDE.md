@@ -19,7 +19,6 @@ GOOGLE_CLIENT_ID=your-google-client-id
 GOOGLE_CLIENT_SECRET=your-google-client-secret
 GOOGLE_MAPS_API_KEY=your-maps-api-key (optional)
 VITE_GOOGLE_MAPS_API_KEY=your-client-maps-key (optional)
-OPENAI_API_KEY=your-openai-key (optional)
 ```
 
 ## Google OAuth Setup for Railway

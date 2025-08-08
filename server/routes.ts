@@ -4,7 +4,7 @@ import { WebSocketServer, WebSocket } from "ws";
 import { storage } from "./storage";
 import { setupAuth, isAuthenticated } from "./googleAuth";
 import { insertPropertySchema, insertSwipeSchema, insertMatchSchema, insertMessageSchema, type Match } from "@shared/schema";
-import { AIRecommendationService } from "./aiRecommendations";
+import { RecommendationService } from "./recommendations";
 import { z } from "zod";
 
 export async function registerRoutes(app: Express): Promise<Server> {
@@ -78,8 +78,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         !swipedPropertyIds.includes(prop.id) && prop.landlordId !== userId
       );
       
-      // Use AI to recommend properties based on user preferences and behavior
-      const recommendedProperties = await AIRecommendationService.generateRecommendations(
+      // Use preference-based algorithm to recommend properties
+      const recommendedProperties = await RecommendationService.generateRecommendations(
         user,
         availableProperties,
         swipedProperties
