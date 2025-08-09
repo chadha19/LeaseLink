@@ -32,6 +32,7 @@ export function getSession() {
     cookie: {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production',
+      sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax',
       maxAge: sessionTtl,
     },
   });
@@ -51,8 +52,8 @@ export async function setupAuth(app: Express) {
     // Replit development environment
     callbackURL = `https://${process.env.REPLIT_DEV_DOMAIN}/api/auth/google/callback`;
   } else if (process.env.RAILWAY_STATIC_URL) {
-    // Railway deployment environment
-    callbackURL = `${process.env.RAILWAY_STATIC_URL}/api/auth/google/callback`;
+    // Railway deployment environment - add https:// protocol
+    callbackURL = `https://${process.env.RAILWAY_STATIC_URL}/api/auth/google/callback`;
   } else if (process.env.NODE_ENV === 'production' && process.env.VERCEL_URL) {
     // Vercel deployment environment
     callbackURL = `https://${process.env.VERCEL_URL}/api/auth/google/callback`;
