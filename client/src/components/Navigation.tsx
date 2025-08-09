@@ -4,6 +4,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { useQuery } from "@tanstack/react-query";
 import { User } from "@shared/schema";
 import { Home, Bell } from "lucide-react";
+import { getLogoutUrl } from "@/lib/auth";
 
 interface NavigationProps {
   onProfileClick?: () => void;
@@ -79,7 +80,7 @@ export default function Navigation({ onProfileClick }: NavigationProps) {
             <Button 
               variant="outline"
               size="sm"
-              onClick={() => window.location.href = '/api/logout'}
+              onClick={() => window.location.href = getLogoutUrl()}
             >
               Logout
             </Button>
