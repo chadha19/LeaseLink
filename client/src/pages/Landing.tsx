@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Home, Heart, MessageCircle, Shield } from "lucide-react";
+import { getGoogleAuthUrl } from "@/lib/auth";
 
 export default function Landing() {
   return (
@@ -17,7 +18,7 @@ export default function Landing() {
             </div>
             
             <Button 
-              onClick={() => window.location.href = '/api/auth/google'}
+              onClick={() => window.location.href = getGoogleAuthUrl()}
               className="bg-[var(--swipe-primary)] hover:bg-opacity-90"
             >
               Get Started
@@ -40,7 +41,7 @@ export default function Landing() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Button 
               size="lg"
-              onClick={() => window.location.href = '/api/auth/google'}
+              onClick={() => window.location.href = getGoogleAuthUrl()}
               className="bg-[var(--swipe-primary)] hover:bg-opacity-90 px-8 py-4 text-lg"
             >
               Start Browsing Properties
@@ -48,7 +49,7 @@ export default function Landing() {
             <Button 
               size="lg"
               variant="outline"
-              onClick={() => window.location.href = '/api/auth/google'}
+              onClick={() => window.location.href = getGoogleAuthUrl()}
               className="px-8 py-4 text-lg border-[var(--swipe-primary)] text-[var(--swipe-primary)] hover:bg-[var(--swipe-primary)] hover:text-white"
             >
               List Your Property
@@ -189,7 +190,7 @@ export default function Landing() {
           </p>
           <Button 
             size="lg"
-            onClick={() => window.location.href = '/api/auth/google'}
+            onClick={() => window.location.href = getGoogleAuthUrl()}
             className="bg-white text-[var(--swipe-primary)] hover:bg-gray-100 px-8 py-4 text-lg"
           >
             Get Started Today

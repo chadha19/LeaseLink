@@ -1,12 +1,14 @@
 # LeaseLink Railway Deployment Guide
 
-## Quick Fix for OAuth Callback Issue
+## Quick Fix for OAuth Callback Issue ✅ FIXED
 
-The 404 error on `/api/auth/google/callback` is fixed by:
+The 404 error on `/api/auth/google/callback` has been resolved:
 
-1. **Updated OAuth Configuration** - Now supports Railway URLs via `RAILWAY_STATIC_URL`
-2. **Proper Port Configuration** - Uses Railway's `PORT` environment variable
-3. **Railway-specific startup script** - `start-railway.js` handles Railway deployment
+1. **✅ Updated OAuth Configuration** - Railway URLs now include `https://` protocol
+2. **✅ Cross-site Cookie Support** - Session cookies work across Railway domains
+3. **✅ Frontend Auth URLs** - Dynamic URLs for production vs development
+4. **✅ Proper Port Configuration** - Uses Railway's `PORT` environment variable
+5. **✅ Railway-specific startup script** - `start-railway.js` handles Railway deployment
 
 ## Environment Variables Required
 
@@ -59,9 +61,11 @@ Railway automatically detects Node.js and runs:
 ## Files Added/Modified for Railway
 
 - ✅ `railway.json` - Railway configuration
-- ✅ `start-railway.js` - Railway startup script
-- ✅ `server/googleAuth.ts` - Updated OAuth callback URLs
+- ✅ `start-railway.js` - Railway startup script  
+- ✅ `server/googleAuth.ts` - Fixed OAuth callback URLs with https:// protocol
 - ✅ `server/index.ts` - Dynamic port configuration
+- ✅ `client/src/lib/auth.ts` - Dynamic auth URLs for production
+- ✅ `client/src/pages/Landing.tsx` - Updated OAuth links
 
 ## Troubleshooting
 
