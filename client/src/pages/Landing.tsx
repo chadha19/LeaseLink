@@ -62,7 +62,7 @@ export default function Landing() {
       <section className="py-16 px-4 sm:px-6 lg:px-8 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center text-gray-900 mb-12">
-            How SwipeHousing Works
+            How LeaseLink Works
           </h2>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
@@ -186,7 +186,7 @@ export default function Landing() {
             Ready to Find Your Perfect Match?
           </h2>
           <p className="text-xl mb-8 opacity-90">
-            Join thousands of users who have found their ideal homes through SwipeHousing
+            Join thousands of users who have found their ideal homes through LeaseLink
           </p>
           <Button 
             size="lg"
@@ -203,7 +203,7 @@ export default function Landing() {
         <div className="max-w-6xl mx-auto text-center">
           <div className="flex items-center justify-center mb-6">
             <Home className="mr-2" size={28} />
-            <span className="text-2xl font-bold">SwipeHousing</span>
+            <span className="text-2xl font-bold">LeaseLink</span>
           </div>
           <p className="text-gray-400">
             The modern way to find your perfect home. Swipe. Match. Move in.
