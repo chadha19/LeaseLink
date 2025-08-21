@@ -78,23 +78,19 @@ Visit `http://localhost:5000` and you should be good to go!
 ## Architecture
 
 ### Frontend (React + TypeScript)
-- **Framework**: Vite + React 18 with TypeScript
-- **Routing**: Wouter for lightweight navigation  
-- **UI**: Tailwind CSS + shadcn/ui components
-- **Animations**: Framer Motion for swipe gestures
-- **State**: TanStack Query for server state management
-
+- **Framework**: React with TypeScript 
+- **UI**: Tailwind CSS
+- 
 ### Backend (Node.js + Express)
 - **Server**: Express.js with TypeScript
-- **Database**: PostgreSQL with Drizzle ORM
-- **Auth**: Google OAuth 2.0 with secure sessions
-- **Real-time**: WebSocket support for chat
+- **Database**: PostgreSQL
+- **Auth**: Google OAuth 2.0
 
 ### Key Features
 - **Cross-platform**: Works on desktop, tablet, and mobile
 - **Real-time Chat**: Instant messaging between matches
 - **Image Uploads**: Property photos and profile pictures
-- **Responsive Design**: Mobile-first interface
+- **Responsive and Interactable Design**
 - **Secure Authentication**: Google OAuth with session management
 
 ## Development
