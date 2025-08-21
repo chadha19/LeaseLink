@@ -1,22 +1,21 @@
 # LeaseLink 🏠
 
-A modern property discovery platform that combines Tinder-like swiping for property browsing with comprehensive landlord management tools.
+A modern twist on finding housing that combines Tinder-like swiping for property browsing.
 
 ## What is LeaseLink?
 
-LeaseLink revolutionizes property hunting by letting you **swipe through curated property listings** that match your preferences. When both you and a landlord express interest, you get matched and can start chatting about your next home.
+LeaseLink revolutionizes property hunting by letting you **swipe through property listings** that match your preferences. When both you and a landlord express interest, you get matched and can start chatting about your next home.
 
 ### For Renters/Buyers
-- 📱 **Swipe Interface**: Browse properties with simple left/right swipes
-- 🎯 **Smart Matching**: Get matched when both parties show interest
-- 💬 **Direct Chat**: Message landlords instantly after matching
-- 🔍 **Personalized Feed**: Properties tailored to your preferences
+- **Swipe Interface**: Browse properties with simple left/right swipes
+- **Smart Matching**: Get matched when both parties show interest
+- **Direct Chat**: Message landlords instantly after matching
+- **Personalized Feed**: Properties tailored to your preferences/filters
 
 ### For Landlords
-- 🏢 **Property Management**: Add, edit, and manage all your listings
-- 👥 **Tenant Applications**: Review interested renters in one place
-- ✅ **Match Approval**: Accept or decline applications efficiently
-- 📊 **Insights**: Track property performance and interest levels
+- **Property Management**: Add, edit, and manage all your listings
+- **Tenant Applications**: Review interested renters and their information
+- **Match Approval**: Accept or decline applications based on your criteria
 
 ## Quick Start
 
@@ -62,18 +61,7 @@ npm run db:push
 npm run dev
 ```
 
-Visit `http://localhost:5000` and start swiping!
-
-## Getting Google OAuth Credentials
-
-1. Go to [Google Cloud Console](https://console.cloud.google.com/)
-2. Create a new project or select existing one
-3. Enable the Google+ API
-4. Go to "Credentials" → "Create Credentials" → "OAuth 2.0 Client IDs"
-5. Set application type to "Web application"
-6. Add authorized redirect URI:
-   - Development: `http://localhost:5000/api/auth/google/callback`
-   - Production: `https://yourdomain.com/api/auth/google/callback`
+Visit `http://localhost:5000` and you should be good to go!
 
 ## How It Works
 
@@ -109,42 +97,6 @@ Visit `http://localhost:5000` and start swiping!
 - **Responsive Design**: Mobile-first interface
 - **Secure Authentication**: Google OAuth with session management
 
-## Deployment
-
-### Railway (Recommended)
-1. Connect your GitHub repository to Railway
-2. Set environment variables in Railway dashboard
-3. Railway automatically builds and deploys
-
-### Vercel
-1. Connect repository to Vercel
-2. Set build command: `npm run build`
-3. Set output directory: `dist/public`
-4. Add environment variables
-
-## API Endpoints
-
-### Authentication
-- `GET /api/auth/google` - Initiate Google OAuth
-- `GET /api/auth/user` - Get current user
-- `GET /api/logout` - Logout user
-
-### Properties
-- `GET /api/properties` - Browse properties (with user preferences)
-- `POST /api/properties` - Create property (landlords only)
-- `GET /api/properties/my` - Get my properties (landlords only)
-- `PATCH /api/properties/:id` - Update property
-- `DELETE /api/properties/:id` - Delete property
-
-### Swipes & Matches
-- `POST /api/swipes` - Swipe on property
-- `GET /api/matches` - Get my matches
-- `PATCH /api/matches/:id/status` - Approve/reject match (landlords)
-
-### Chat
-- `GET /api/messages/:matchId` - Get chat messages
-- `POST /api/messages` - Send message
-
 ## Development
 
 ### Available Scripts
@@ -170,25 +122,5 @@ Visit `http://localhost:5000` and start swiping!
 └── public/               # Static assets
 ```
 
-## Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit changes (`git commit -m 'Add amazing feature'`)
-4. Push to branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
-## Support
-
-For questions or issues:
-1. Check existing issues in the repository
-2. Create a new issue with detailed description
-3. Include error messages and steps to reproduce
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
----
-
-**Happy house hunting! 🏠✨**
