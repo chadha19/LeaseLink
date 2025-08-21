@@ -1,4 +1,4 @@
-# LeaseLink - leaselink.pro 🏠
+# LeaseLink - [leaselink.pro](https://www.leaselink.pro/) 🏠
 
 A modern twist on finding housing that combines Tinder-like swiping for property browsing.
 
